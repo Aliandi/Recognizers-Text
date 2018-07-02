@@ -178,12 +178,12 @@ public class JapaneseNumeric {
             .replace("{ZeroToNineIntegerRegex}", ZeroToNineIntegerRegex);
 
     public static final String NumbersWithAllowListRegex = "(({NotSingleRegex}|{SingleRegex})(?!({AllIntRegex}*([、.]{ZeroToNineIntegerRegex}+)*|{AllFloatRegex})*\\s*{PercentageRegex}*))"
-            .replace("{AllIntRegex}", AllIntRegex)
-            .replace("{AllFloatRegex}", AllFloatRegex)
-            .replace("{NegativeNumberTermsRegex}", NegativeNumberTermsRegex)
             .replace("{NotSingleRegex}", NotSingleRegex)
             .replace("{SingleRegex}", SingleRegex)
-            .replace("{ZeroToNineIntegerRegex}", ZeroToNineIntegerRegex);
+            .replace("{AllIntRegex}", AllIntRegex)
+            .replace("{ZeroToNineIntegerRegex}", ZeroToNineIntegerRegex)
+            .replace("{AllFloatRegex}", AllFloatRegex)
+            .replace("{PercentageRegex}", PercentageRegex);
 
     public static final String NumbersAggressiveRegex = "(({AllIntRegex})(?!({AllIntRegex}*([、.]{ZeroToNineIntegerRegex}+)*|{AllFloatRegex})*\\s*{PercentageRegex}*))"
             .replace("{AllIntRegex}", AllIntRegex)
