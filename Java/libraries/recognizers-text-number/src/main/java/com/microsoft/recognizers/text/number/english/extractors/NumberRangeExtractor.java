@@ -1,5 +1,6 @@
 package com.microsoft.recognizers.text.number.english.extractors;
 
+import com.microsoft.recognizers.text.number.Constants;
 import com.microsoft.recognizers.text.number.NumberRangeConstants;
 import com.microsoft.recognizers.text.number.extractors.BaseNumberRangeExtractor;
 import com.microsoft.recognizers.text.number.parsers.BaseNumberParser;
@@ -50,5 +51,10 @@ public class NumberRangeExtractor extends BaseNumberRangeExtractor {
     @Override
     protected Map<Pattern, String> getRegexes() {
         return this.regexes;
+    }
+
+    @Override
+    protected String getExtractType() {
+        return Constants.SYS_NUMRANGE;
     }
 }

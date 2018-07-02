@@ -24,9 +24,7 @@ public abstract class BaseNumberRangeExtractor implements IExtractor {
 
     protected abstract Map<Pattern, String> getRegexes();
 
-    protected String getExtractType() {
-        return "";
-    }
+    protected abstract String getExtractType();
 
     protected BaseNumberRangeExtractor(BaseNumberExtractor numberExtractor, BaseNumberExtractor ordinalExtractor, BaseNumberParser numberParser) {
         this.numberExtractor = numberExtractor;
