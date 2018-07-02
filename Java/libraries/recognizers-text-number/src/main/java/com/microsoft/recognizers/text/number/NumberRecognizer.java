@@ -10,6 +10,8 @@ import com.microsoft.recognizers.text.number.english.parsers.EnglishNumberParser
 import com.microsoft.recognizers.text.number.english.parsers.EnglishNumberRangeParserConfiguration;
 import com.microsoft.recognizers.text.number.french.parsers.FrenchNumberParserConfiguration;
 import com.microsoft.recognizers.text.number.german.parsers.GermanNumberParserConfiguration;
+import com.microsoft.recognizers.text.number.japanese.parsers.JapaneseNumberParserConfiguration;
+import com.microsoft.recognizers.text.number.japanese.parsers.JapaneseNumberRangeParserConfiguration;
 import com.microsoft.recognizers.text.number.models.NumberModel;
 import com.microsoft.recognizers.text.number.models.NumberRangeModel;
 import com.microsoft.recognizers.text.number.models.OrdinalModel;
@@ -210,6 +212,21 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
         registerModel(NumberRangeModel.class, Culture.Chinese, (options) -> new NumberRangeModel(
                 new BaseNumberRangeParser(new ChineseNumberRangeParserConfiguration()),
                 new com.microsoft.recognizers.text.number.chinese.extractors.NumberRangeExtractor()));
+        //endregion
+
+        //region Japanese
+        registerModel(NumberModel.class, Culture.Japanese, (options) -> new NumberModel(
+                AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new JapaneseNumberParserConfiguration()),
+                new com.microsoft.recognizers.text.number.japanese.extractors.NumberExtractor()));
+        registerModel(OrdinalModel.class, Culture.Japanese, (options) -> new OrdinalModel(
+                AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Ordinal, new JapaneseNumberParserConfiguration()),
+                new com.microsoft.recognizers.text.number.japanese.extractors.OrdinalExtractor()));
+        registerModel(PercentModel.class, Culture.Japanese, (options) -> new PercentModel(
+                AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Percentage, new JapaneseNumberParserConfiguration()),
+                new com.microsoft.recognizers.text.number.japanese.extractors.PercentageExtractor()));
+        registerModel(NumberRangeModel.class, Culture.Japanese, (options) -> new NumberRangeModel(
+                new BaseNumberRangeParser(new JapaneseNumberRangeParserConfiguration()),
+                new com.microsoft.recognizers.text.number.japanese.extractors.NumberRangeExtractor()));
         //endregion
     }
 }
