@@ -6,6 +6,7 @@ import com.microsoft.recognizers.text.number.extractors.BaseNumberRangeExtractor
 import com.microsoft.recognizers.text.number.japanese.parsers.JapaneseNumberParserConfiguration;
 import com.microsoft.recognizers.text.number.parsers.BaseCJKNumberParser;
 import com.microsoft.recognizers.text.number.resources.JapaneseNumeric;
+import com.microsoft.recognizers.text.utilities.RegExpUtility;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,10 +40,10 @@ public class NumberRangeExtractor extends BaseNumberRangeExtractor {
         builder.put(Pattern.compile(JapaneseNumeric.TwoNumberRangeRegex1, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.TWONUMBETWEEN);
 
         // より大きい...より小さい...
-        builder.put(Pattern.compile(JapaneseNumeric.TwoNumberRangeRegex2, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.TWONUM);
+        builder.put(RegExpUtility.getSafeRegExp(JapaneseNumeric.TwoNumberRangeRegex2, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.TWONUM);
 
         // より小さい...より大きい...
-        builder.put(Pattern.compile(JapaneseNumeric.TwoNumberRangeRegex3, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.TWONUM);
+        builder.put(RegExpUtility.getSafeRegExp(JapaneseNumeric.TwoNumberRangeRegex3, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.TWONUM);
 
         // ...と/から..., 20~30
         builder.put(Pattern.compile(JapaneseNumeric.TwoNumberRangeRegex4, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.TWONUMTILL);
@@ -66,7 +67,7 @@ public class NumberRangeExtractor extends BaseNumberRangeExtractor {
         builder.put(Pattern.compile(JapaneseNumeric.OneNumberRangeLessRegex3, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.LESS);
 
         // イコール...　｜　...等しい|
-        builder.put(Pattern.compile(JapaneseNumeric.OneNumberRangeEqualRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.EQUAL);
+        builder.put(RegExpUtility.getSafeRegExp(JapaneseNumeric.OneNumberRangeEqualRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), NumberRangeConstants.EQUAL);
 
         this.regexes = Collections.unmodifiableMap(builder);
 

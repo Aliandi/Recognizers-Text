@@ -53,7 +53,7 @@ public class IntegerExtractor extends BaseNumberExtractor {
             case Default:
                 // 一百五十五, 负一亿三百二十二.
                 // Uses an allow list to avoid extracting "西九条" from "九"
-                builder.put(Pattern.compile(JapaneseNumeric.NumbersWithAllowListRegex, Pattern.UNICODE_CHARACTER_CLASS), "IntegerJpn");
+                builder.put(Pattern.compile(Pattern.quote(JapaneseNumeric.NumbersWithAllowListRegex), Pattern.UNICODE_CHARACTER_CLASS), "IntegerJpn");
                 break;
 
             case ExtractAll:

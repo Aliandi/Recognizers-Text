@@ -26,13 +26,13 @@ public class PercentageExtractor extends BaseNumberExtractor {
         HashMap<Pattern, String> builder = new HashMap<>();
 
         //二十个百分点,  四点五个百分点
-        builder.put(Pattern.compile(JapaneseNumeric.PercentagePointRegex, Pattern.UNICODE_CHARACTER_CLASS), "PerChs");
+        builder.put(Pattern.compile(Pattern.quote(JapaneseNumeric.PercentagePointRegex), Pattern.UNICODE_CHARACTER_CLASS), "PerChs");
 
         //百分之五十  百分之一点五
-        builder.put(Pattern.compile(JapaneseNumeric.SimplePercentageRegex, Pattern.UNICODE_CHARACTER_CLASS), "PerChs");
+        builder.put(Pattern.compile(Pattern.quote(JapaneseNumeric.SimplePercentageRegex), Pattern.UNICODE_CHARACTER_CLASS), "PerChs");
 
         //百分之５６.２　百分之１２
-        builder.put(Pattern.compile(JapaneseNumeric.NumbersPercentagePointRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), "PerNum");
+        builder.put(Pattern.compile(Pattern.quote(JapaneseNumeric.NumbersPercentagePointRegex), Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), "PerNum");
 
         //百分之3,000  百分之１，１２３
         builder.put(Pattern.compile(JapaneseNumeric.NumbersPercentageWithSeparatorRegex, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS), "PerNum");
