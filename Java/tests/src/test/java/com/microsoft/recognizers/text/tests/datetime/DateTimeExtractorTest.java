@@ -14,7 +14,9 @@ import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimeExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDurationExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimeExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import org.javatuples.Pair;
 import org.junit.Assert;
@@ -86,6 +88,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 		switch (name) {
 			case "DurationExtractor":
 				return new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
+			case "TimeExtractor":
+				return new BaseTimeExtractor(new EnglishTimeExtractorConfiguration());
 			default:
 				throw new AssumptionViolatedException("Extractor Type/Name not supported.");
 		}
