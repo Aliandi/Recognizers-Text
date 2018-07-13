@@ -6,6 +6,7 @@ import com.microsoft.recognizers.text.datetime.extractors.IDateTimeExtractor;
 import com.microsoft.recognizers.text.datetime.extractors.config.ITimeExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimeZoneExtractor;
 
 import java.util.regex.Pattern;
 import java.util.ArrayList;

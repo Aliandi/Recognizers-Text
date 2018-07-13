@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.text.Normalizer;
 
 public class FormatUtility {
     public static String preprocess(String query) {
@@ -57,5 +58,16 @@ public class FormatUtility {
 
         return Arrays.stream(input.split(delimitersRegex)).filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
+    }
+
+    public static String removeDiacritics(String query) {
+        if(query == null) {
+            return null;
+        }
+
+        String normalizedQuery = Normalizer.normalize(
+                Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{M}", ""), Normalizer.Form.NFC);
+
+        return normalizedQuery;
     }
 }

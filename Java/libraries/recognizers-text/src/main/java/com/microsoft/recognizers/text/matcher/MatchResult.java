@@ -9,10 +9,15 @@ public class MatchResult<T> {
     private T text;
     private Set<String> canonicalValues;
 
-    public MatchResult(int start, int lenght, HashSet<String> canonicalValues) {
+    public MatchResult(int start, int lenght, Set<String> canonicalValues, T text) {
         this.start = start;
         this.length = lenght;
         this.canonicalValues = canonicalValues;
+        this.text = text;
+    }
+
+    public MatchResult(int start, int length, Set<String> canonicalValues) {
+        this(start, length, canonicalValues, null);
     }
 
     public MatchResult(int start, int length) {
@@ -45,6 +50,10 @@ public class MatchResult<T> {
 
     public void setText(T text) {
         this.text = text;
+    }
+
+    public int getEnd() {
+        return this.start + this.length;
     }
 
     public Set<String> getCanonicalValues() {

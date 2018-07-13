@@ -77,7 +77,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 				case Culture.English:
 					return getEnglishExtractor(name);
 				default:
-					throw new AssumptionViolatedException("Extractor Type/Name not supported.");
+					throw new AssumptionViolatedException(
+							"Extractor Type/Name not supported. name='{name}'".replace("{name}", name));
 			}
 		} catch (IllegalArgumentException ex) {
 			throw new AssumptionViolatedException(ex.getMessage(), ex);
@@ -91,7 +92,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 			case "TimeExtractor":
 				return new BaseTimeExtractor(new EnglishTimeExtractorConfiguration());
 			default:
-				throw new AssumptionViolatedException("Extractor Type/Name not supported.");
+				throw new AssumptionViolatedException(
+						"Extractor Type/Name not supported. name='{name}'".replace("{name}", name));
 		}
 	}
 }

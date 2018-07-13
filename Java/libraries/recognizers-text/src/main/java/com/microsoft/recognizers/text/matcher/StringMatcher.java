@@ -67,4 +67,27 @@ public class StringMatcher {
     private Iterable<String>[] getTokenizedText(Iterable<String> values) {
         return (Iterable<String>[]) StreamSupport.stream(values.spliterator(), false).map(t -> tokenizer.tokenize(t).stream().map(i -> i.text)).toArray();
     }
+
+    public Iterable<MatchResult<String>> find(Iterable<String> tokenizedQuery) {
+        return matcher.find(tokenizedQuery);
+    }
+
+    public Iterable<MatchResult<String>> find(String queryText) {
+        List<Token> queryTokens = tokenizer.tokenize(queryText);
+        Iterable<String> tokenizedQueryText = (Iterable<String>) StreamSupport.stream(queryTokens.spliterator(), false).map(t -> t.text);
+
+        List<MatchResult<String>> ret = new ArrayList<MatchResult<String>>();
+
+        for (MatchResult<String> r : find(tokenizedQueryText)) {
+            Token startToken = queryTokens.get(r.getStart());
+            Token endToken = queryTokens.get(r.getStart() + r.getLength() - 1);
+            int start = startToken.getStart();
+            int length = endToken.getEnd() - startToken.getStart();
+            String rtext = queryText.substring(start, length);
+
+            ret.add(new MatchResult<String>(start, length, r.getCanonicalValues(), rtext));
+        }
+
+        return ret;
+    }
 }
