@@ -67,4 +67,8 @@ public class StringMatcher {
     private Iterable<String>[] getTokenizedText(Iterable<String> values) {
         return (Iterable<String>[]) StreamSupport.stream(values.spliterator(), false).map(t -> tokenizer.tokenize(t).stream().map(i -> i.text)).toArray();
     }
+
+    public Iterable<MatchResult<String>> find(String queryText){
+        throw new UnsupportedOperationException();
+    }
 }

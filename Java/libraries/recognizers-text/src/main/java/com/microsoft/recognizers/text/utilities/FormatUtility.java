@@ -58,4 +58,8 @@ public class FormatUtility {
         return Arrays.stream(input.split(delimitersRegex)).filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
     }
+
+    public static String removeDiacritics(String query){
+        throw new UnsupportedOperationException();
+    }
 }
