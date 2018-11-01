@@ -1,5 +1,6 @@
 package com.microsoft.recognizers.text.utilities;
 
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -60,6 +61,23 @@ public class FormatUtility {
     }
 
     public static String removeDiacritics(String query){
-        throw new UnsupportedOperationException();
+        if(query==null){
+            return null;
+        }
+
+        String norm = Normalizer.normalize(query, Normalizer.Form.NFD);
+        int j = 0;
+        char[] out = new char[query.length()];
+        for (int i = 0, n = norm.length(); i < n; ++i) {
+            char c = norm.charAt(i);
+            int type = Character.getType(c);
+
+            if (type != Character.NON_SPACING_MARK){
+                out[j] = c;
+                j++;
+            }
+        }
+
+        return new String(out);
     }
 }
