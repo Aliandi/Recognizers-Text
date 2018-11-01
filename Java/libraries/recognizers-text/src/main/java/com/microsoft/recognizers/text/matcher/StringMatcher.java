@@ -35,7 +35,7 @@ public class StringMatcher {
         this(MatchStrategy.TrieTree, null);
     }
 
-    void init(Iterable<String> values) {
+    public void init(Iterable<String> values) {
         init(values, (String[]) StreamSupport.stream(values.spliterator(), false).toArray());
     }
 

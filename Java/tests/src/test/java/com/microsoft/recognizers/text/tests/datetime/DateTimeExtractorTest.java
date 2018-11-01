@@ -12,7 +12,9 @@ import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDateExtractorConfiguration;
+import com.microsoft.recognizers.text.datetime.english.extractors.EnglishTimeZoneExtractorConfiguration;
 import com.microsoft.recognizers.text.datetime.extractors.BaseDateExtractor;
+import com.microsoft.recognizers.text.datetime.extractors.BaseTimeZoneExtractor;
 import com.microsoft.recognizers.text.tests.AbstractTest;
 import com.microsoft.recognizers.text.tests.TestCase;
 import com.microsoft.recognizers.text.datetime.english.extractors.EnglishDurationExtractorConfiguration;
@@ -93,6 +95,8 @@ public class DateTimeExtractorTest extends AbstractTest {
 				return new BaseDurationExtractor(new EnglishDurationExtractorConfiguration());
 			case "DateExtractor":
 				return new BaseDateExtractor(new EnglishDateExtractorConfiguration());
+			case "TimeZoneExtractor":
+				return new BaseTimeZoneExtractor(new EnglishTimeZoneExtractorConfiguration());
 			default:
 				throw new AssumptionViolatedException("Extractor Type/Name not supported.");
 		}
