@@ -3,6 +3,7 @@ package com.microsoft.recognizers.text.matcher;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class StringMatcher {
@@ -68,7 +69,25 @@ public class StringMatcher {
         return (Iterable<String>[]) StreamSupport.stream(values.spliterator(), false).map(t -> tokenizer.tokenize(t).stream().map(i -> i.text)).toArray();
     }
 
-    public Iterable<MatchResult<String>> find(String queryText){
-        throw new UnsupportedOperationException();
+    public Iterable<MatchResult<String>> find(Iterable<String> tokenizedQuery) {
+        return matcher.find(tokenizedQuery);
+    }
+
+    public Iterable<MatchResult<String>> find(String queryText) {
+        List<Token> queryTokens = tokenizer.tokenize(queryText);
+        Iterable<String> tokenizedQueryText = queryTokens.stream().map(t -> t.text).collect(Collectors.toCollection(ArrayList::new));
+
+        List<MatchResult<String>> result = new ArrayList<>();
+        for (MatchResult<String> r : find(tokenizedQueryText)) {
+            Token startToken = queryTokens.get(r.getStart());
+            Token endToken = queryTokens.get(r.getStart() + r.getLength() - 1);
+            int start = startToken.getStart();
+            int length = endToken.getEnd() - startToken.getStart();
+            String rtext = queryText.substring(start, length);
+
+            result.add(new MatchResult<String>(start, length, r.getCanonicalValues(), rtext));
+        }
+
+        return result;
     }
 }
