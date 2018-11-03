@@ -1,6 +1,7 @@
 package com.microsoft.recognizers.text.matcher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,7 +12,7 @@ public class StringMatcher {
     private final IMatcher<String> matcher;
 
     public StringMatcher(MatchStrategy strategy, ITokenizer tokenizer) {
-        this.tokenizer = tokenizer;
+        this.tokenizer = tokenizer != null ? tokenizer : new SimpleTokenizer();
         switch (strategy) {
             case AcAutomaton:
                 matcher = new AcAutomation<>();
@@ -37,11 +38,11 @@ public class StringMatcher {
     }
 
     public void init(Iterable<String> values) {
-        init(values, (String[]) StreamSupport.stream(values.spliterator(), false).toArray());
+        init(values, (String[]) StreamSupport.stream(values.spliterator(), false).toArray(size -> new String[size]));
     }
 
     void init(Iterable<String> values, String[] ids) {
-        Iterable<String>[] tokenizedValues = getTokenizedText(values);
+        List<List<String>> tokenizedValues = getTokenizedText(values);
         init(tokenizedValues, ids);
     }
 
@@ -57,16 +58,21 @@ public class StringMatcher {
             }
         }
 
-        Iterable<String>[] tokenizedValues = getTokenizedText(values);
+        List<List<String>> tokenizedValues = getTokenizedText(values);
         init(tokenizedValues, (String[]) ids.toArray());
     }
 
-    void init(Iterable<String>[] tokenizedValues, String[] ids) {
+    void init(List<List<String>> tokenizedValues, String[] ids) {
         matcher.init(tokenizedValues, ids);
     }
 
-    private Iterable<String>[] getTokenizedText(Iterable<String> values) {
-        return (Iterable<String>[]) StreamSupport.stream(values.spliterator(), false).map(t -> tokenizer.tokenize(t).stream().map(i -> i.text)).toArray();
+    private List<List<String>> getTokenizedText(Iterable<String> values) {
+        List<List<String>> result = new ArrayList<>();
+        for (String value: values) {
+            result.add(tokenizer.tokenize(value).stream().map(i -> i.text).collect(Collectors.toCollection(ArrayList::new)));
+        }
+
+        return result;
     }
 
     public Iterable<MatchResult<String>> find(Iterable<String> tokenizedQuery) {
@@ -83,7 +89,7 @@ public class StringMatcher {
             Token endToken = queryTokens.get(r.getStart() + r.getLength() - 1);
             int start = startToken.getStart();
             int length = endToken.getEnd() - startToken.getStart();
-            String rtext = queryText.substring(start, length);
+            String rtext = queryText.substring(start, start + length);
 
             result.add(new MatchResult<String>(start, length, r.getCanonicalValues(), rtext));
         }

@@ -32,7 +32,7 @@ public class AcAutomation<T> extends AbstractMatcher<T> {
     }
 
     @Override
-    public void init(Iterable<T>[] values, String[] ids) {
+    public void init(List<List<T>> values, String[] ids) {
         this.batchInsert(values, ids);
         Queue<AaNode<T>> queue = new LinkedList<>();
         queue.offer(root);

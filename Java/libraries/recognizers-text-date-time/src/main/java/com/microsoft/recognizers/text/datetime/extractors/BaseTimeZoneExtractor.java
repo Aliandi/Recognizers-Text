@@ -74,31 +74,31 @@ public class BaseTimeZoneExtractor implements IDateTimeZoneExtractor {
         if (timeMatch.length != 0)
         {
             int lastMatchIndex = timeMatch[timeMatch.length - 1].index;
-            MatchResult<String>[] cityMatchResult = (MatchResult<String>[]) StreamSupport.stream(
-                    config.getCityMatcher().find(text.substring(0, lastMatchIndex).toLowerCase()).spliterator(), false).toArray();;
+            Iterable<MatchResult<String>> findResult = config.getCityMatcher().find(text.substring(0, lastMatchIndex).toLowerCase());
+            List<MatchResult<String>> cityMatchResult = StreamSupport.stream(findResult.spliterator(),false).collect(Collectors.toList());
 
             int i = 0;
             for(Match match: timeMatch)
             {
                 boolean hasCityBefore = false;
 
-                while (i < cityMatchResult.length && cityMatchResult[i].getEnd() <= match.index)
+                while (i < cityMatchResult.size() && cityMatchResult.get(i).getEnd() <= match.index)
                 {
                     hasCityBefore = true;
                     i++;
 
-                    if (i == cityMatchResult.length)
+                    if (i == cityMatchResult.size())
                     {
                         break;
                     }
                 }
 
-                if (hasCityBefore && cityMatchResult[i - 1].getEnd() == match.index)
+                if (hasCityBefore && cityMatchResult.get(i - 1).getEnd() == match.index)
                 {
-                    ret.add(new Token(cityMatchResult[i - 1].getStart(), match.index + match.length));
+                    ret.add(new Token(cityMatchResult.get(i - 1).getStart(), match.index + match.length));
                 }
 
-                if (i == cityMatchResult.length)
+                if (i == cityMatchResult.size())
                 {
                     break;
                 }

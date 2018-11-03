@@ -31,7 +31,7 @@ public class TrieTree<T> extends AbstractMatcher<T> {
     }
 
     @Override
-    public void init(Iterable<T>[] values, String[] ids) {
+    public void init(List<List<T>> values, String[] ids) {
         batchInsert(values, ids);
     }
 
@@ -40,7 +40,7 @@ public class TrieTree<T> extends AbstractMatcher<T> {
         List<MatchResult<T>> result = new ArrayList<>();
 
         ArrayList<T> queryArray = new ArrayList<>();
-        queryArray.iterator().forEachRemaining(queryArray::add);
+        queryText.iterator().forEachRemaining(queryArray::add);
 
         for (int i = 0; i < queryArray.size(); i++) {
             Node<T> node = root;
