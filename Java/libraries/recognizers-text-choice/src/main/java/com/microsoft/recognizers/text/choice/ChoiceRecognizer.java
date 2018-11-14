@@ -4,6 +4,12 @@ import java.util.List;
 import com.microsoft.recognizers.text.IModel;
 import com.microsoft.recognizers.text.ModelResult;
 import com.microsoft.recognizers.text.Recognizer;
+import com.microsoft.recognizers.text.choice.english.extractors.EnglishBooleanExtractorConfiguration;
+import com.microsoft.recognizers.text.choice.extractors.BooleanExtractor;
+import com.microsoft.recognizers.text.choice.models.BooleanModel;
+import com.microsoft.recognizers.text.choice.parsers.BooleanParser;
+
+import java.util.List;
 
 public class ChoiceRecognizer extends Recognizer<ChoiceOptions> {
 
