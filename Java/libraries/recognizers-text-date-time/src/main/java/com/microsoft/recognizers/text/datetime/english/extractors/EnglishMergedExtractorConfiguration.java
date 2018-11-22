@@ -36,7 +36,7 @@ public class EnglishMergedExtractorConfiguration implements IMergedExtractorConf
     public static final Pattern PrepositionSuffixRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.PrepositionSuffixRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern SingleAmbiguousMonthRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.SingleAmbiguousMonthRegex, Pattern.CASE_INSENSITIVE);
     public static final Pattern UnspecificDatePeriodRegex = RegExpUtility.getSafeRegExp(EnglishDateTime.UnspecificDatePeriodRegex, Pattern.CASE_INSENSITIVE);
-
+    public static final StringMatcher SuperfluousWordMatcher = new StringMatcher();
 
     private DateTimeOptions options;
     private IDateTimeExtractor setExtractor;
@@ -67,7 +67,7 @@ public class EnglishMergedExtractorConfiguration implements IMergedExtractorConf
     }
 
     public final StringMatcher getSuperfluousWordMatcher() {
-        return new StringMatcher();
+        return SuperfluousWordMatcher;
     }
 
     public final DateTimeOptions getOptions() {
