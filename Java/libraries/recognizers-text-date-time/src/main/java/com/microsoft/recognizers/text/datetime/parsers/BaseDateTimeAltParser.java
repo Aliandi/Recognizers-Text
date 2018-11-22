@@ -9,21 +9,26 @@ import com.microsoft.recognizers.text.datetime.TimeTypeConstants;
 import com.microsoft.recognizers.text.datetime.parsers.config.IDateTimeAltParserConfiguration;
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeResolutionResult;
 import com.microsoft.recognizers.text.datetime.utilities.FormatUtil;
-import org.javatuples.Pair;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+
+import org.javatuples.Pair;
 
 public class BaseDateTimeAltParser implements IDateTimeParser {
 
     private static final String parserName = Constants.SYS_DATETIME_DATETIMEALT;
     private final IDateTimeAltParserConfiguration config;
 
-    public BaseDateTimeAltParser(IDateTimeAltParserConfiguration config) { this.config = config; }
+    public BaseDateTimeAltParser(IDateTimeAltParserConfiguration config) {
+        this.config = config;
+    }
 
     @Override
-    public String getParserName() { return parserName; }
+    public String getParserName() {
+        return parserName;
+    }
 
     @Override
     public ParseResult parse(ExtractResult extractResult) {
@@ -59,14 +64,14 @@ public class BaseDateTimeAltParser implements IDateTimeParser {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
 
         // Original type of the extracted entity
-        String subType = ((Map<String, Object>)(er.data)).get(Constants.SubType).toString();
+        String subType = ((Map<String, Object>) (er.data)).get(Constants.SubType).toString();
         ExtractResult dateTimeEr = new ExtractResult();
 
         // e.g. {next week Mon} or {Tue}, formmer--"next week Mon" doesn't contain "context" key
         boolean hasContext = false;
         ExtractResult contextEr = null;
-        if (((Map<String, Object>)er.data).containsKey(Constants.Context)) {
-            contextEr = (ExtractResult)((Map<String, Object>)er.data).get(Constants.Context);
+        if (((Map<String, Object>) er.data).containsKey(Constants.Context)) {
+            contextEr = (ExtractResult) ((Map<String, Object>) er.data).get(Constants.Context);
             if (contextEr.type.equals(Constants.ContextType_RelativeSuffix)) {
                 dateTimeEr = dateTimeEr.withText(String.format("%s %s", er.text, contextEr.text));
             } else {
@@ -84,8 +89,7 @@ public class BaseDateTimeAltParser implements IDateTimeParser {
             dateTimeEr = dateTimeEr.withType(Constants.SYS_DATETIME_DATE);
             dateTimePr = this.config.getDateParser().parse(dateTimeEr, referenceTime);
         } else if (subType.equals(Constants.SYS_DATETIME_TIME)) {
-            if (!hasContext)
-            {
+            if (!hasContext) {
                 dateTimeEr = dateTimeEr.withType(Constants.SYS_DATETIME_TIME);
                 dateTimePr = this.config.getTimeParser().parse(dateTimeEr, referenceTime);
             } else if (contextEr.type.equals(Constants.SYS_DATETIME_DATE) || contextEr.type.equals(Constants.ContextType_RelativePrefix)) {
@@ -122,8 +126,8 @@ public class BaseDateTimeAltParser implements IDateTimeParser {
         }
 
         if (dateTimePr != null && dateTimePr.value != null) {
-            ret.setFutureValue(((DateTimeResolutionResult)dateTimePr.value).getFutureValue());
-            ret.setPastValue(((DateTimeResolutionResult)dateTimePr.value).getPastValue());
+            ret.setFutureValue(((DateTimeResolutionResult) dateTimePr.value).getFutureValue());
+            ret.setPastValue(((DateTimeResolutionResult) dateTimePr.value).getPastValue());
             ret.setTimex(dateTimePr.timexStr);
 
             // Create resolution
@@ -136,7 +140,7 @@ public class BaseDateTimeAltParser implements IDateTimeParser {
     }
 
     private void getResolution(ExtractResult er, DateTimeParseResult pr, DateTimeResolutionResult ret) {
-        String parentText = ((Map<String, Object>)er.data).get(ExtendedModelResult.ParentTextKey).toString();
+        String parentText = ((Map<String, Object>) er.data).get(ExtendedModelResult.ParentTextKey).toString();
         String type = pr.type;
 
         boolean isPeriod = false;
@@ -157,28 +161,28 @@ public class BaseDateTimeAltParser implements IDateTimeParser {
                 case Constants.SYS_DATETIME_DATEPERIOD:
                     startPointType = TimeTypeConstants.START_DATE;
                     endPointType = TimeTypeConstants.END_DATE;
-                    pastStartPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>)ret.getPastValue()).getValue0());
-                    pastEndPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>)ret.getPastValue()).getValue1());
-                    futureStartPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>)ret.getFutureValue()).getValue0());
-                    futureEndPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>)ret.getFutureValue()).getValue1());
+                    pastStartPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>) ret.getPastValue()).getValue0());
+                    pastEndPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>) ret.getPastValue()).getValue1());
+                    futureStartPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>) ret.getFutureValue()).getValue0());
+                    futureEndPointResolution = FormatUtil.formatDate(((Pair<LocalDateTime, LocalDateTime>) ret.getFutureValue()).getValue1());
                     break;
 
                 case Constants.SYS_DATETIME_DATETIMEPERIOD:
                     startPointType = TimeTypeConstants.START_DATETIME;
                     endPointType = TimeTypeConstants.END_DATETIME;
-                    pastStartPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)ret.getPastValue()).getValue0());
-                    pastEndPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)ret.getPastValue()).getValue1());
-                    futureStartPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)ret.getFutureValue()).getValue0());
-                    futureEndPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>)ret.getFutureValue()).getValue1());
+                    pastStartPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>) ret.getPastValue()).getValue0());
+                    pastEndPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>) ret.getPastValue()).getValue1());
+                    futureStartPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>) ret.getFutureValue()).getValue0());
+                    futureEndPointResolution = FormatUtil.formatDateTime(((Pair<LocalDateTime, LocalDateTime>) ret.getFutureValue()).getValue1());
                     break;
 
                 case Constants.SYS_DATETIME_TIMEPERIOD:
                     startPointType = TimeTypeConstants.START_TIME;
                     endPointType = TimeTypeConstants.END_TIME;
-                    pastStartPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>)ret.getPastValue()).getValue0());
-                    pastEndPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>)ret.getPastValue()).getValue1());
-                    futureStartPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>)ret.getFutureValue()).getValue0());
-                    futureEndPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>)ret.getFutureValue()).getValue1());
+                    pastStartPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>) ret.getPastValue()).getValue0());
+                    pastEndPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>) ret.getPastValue()).getValue1());
+                    futureStartPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>) ret.getFutureValue()).getValue0());
+                    futureEndPointResolution = FormatUtil.formatTime(((Pair<LocalDateTime, LocalDateTime>) ret.getFutureValue()).getValue1());
                     break;
             }
         } else {
@@ -186,44 +190,43 @@ public class BaseDateTimeAltParser implements IDateTimeParser {
             switch (type) {
                 case Constants.SYS_DATETIME_DATE:
                     singlePointType = TimeTypeConstants.DATE;
-                    singlePointResolution = FormatUtil.formatDate((LocalDateTime)ret.getFutureValue());
+                    singlePointResolution = FormatUtil.formatDate((LocalDateTime) ret.getFutureValue());
                     break;
 
                 case Constants.SYS_DATETIME_DATETIME:
                     singlePointType = TimeTypeConstants.DATETIME;
-                    singlePointResolution = FormatUtil.formatDateTime((LocalDateTime)ret.getFutureValue());
+                    singlePointResolution = FormatUtil.formatDateTime((LocalDateTime) ret.getFutureValue());
                     break;
 
                 case Constants.SYS_DATETIME_TIME:
                     singlePointType = TimeTypeConstants.TIME;
-                    singlePointResolution = FormatUtil.formatTime((LocalDateTime)ret.getFutureValue());
+                    singlePointResolution = FormatUtil.formatTime((LocalDateTime) ret.getFutureValue());
                     break;
             }
         }
 
-        if (isPeriod)
-        {
+        if (isPeriod) {
             ret.setFutureResolution(ImmutableMap.<String, String>builder()
-            .put(startPointType, futureStartPointResolution)
-            .put(endPointType, futureEndPointResolution)
-            .put(ExtendedModelResult.ParentTextKey, parentText)
-            .build());
+                    .put(startPointType, futureStartPointResolution)
+                    .put(endPointType, futureEndPointResolution)
+                    .put(ExtendedModelResult.ParentTextKey, parentText)
+                    .build());
 
             ret.setPastResolution(ImmutableMap.<String, String>builder()
-            .put(startPointType, pastStartPointResolution)
-            .put(endPointType, pastEndPointResolution)
-            .put(ExtendedModelResult.ParentTextKey, parentText)
-            .build());
+                    .put(startPointType, pastStartPointResolution)
+                    .put(endPointType, pastEndPointResolution)
+                    .put(ExtendedModelResult.ParentTextKey, parentText)
+                    .build());
         } else if (isSinglePoint) {
             ret.setFutureResolution(ImmutableMap.<String, String>builder()
-                .put(singlePointType, singlePointResolution)
-                .put(ExtendedModelResult.ParentTextKey, parentText)
-                .build());
+                    .put(singlePointType, singlePointResolution)
+                    .put(ExtendedModelResult.ParentTextKey, parentText)
+                    .build());
 
             ret.setPastResolution(ImmutableMap.<String, String>builder()
-                .put(singlePointType, singlePointResolution)
-                .put(ExtendedModelResult.ParentTextKey, parentText)
-                .build());
+                    .put(singlePointType, singlePointResolution)
+                    .put(ExtendedModelResult.ParentTextKey, parentText)
+                    .build());
         }
     }
 

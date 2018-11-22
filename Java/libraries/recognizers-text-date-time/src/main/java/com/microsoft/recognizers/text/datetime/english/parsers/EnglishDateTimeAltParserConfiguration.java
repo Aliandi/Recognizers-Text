@@ -6,6 +6,13 @@ import com.microsoft.recognizers.text.datetime.parsers.config.IDateTimeAltParser
 
 public class EnglishDateTimeAltParserConfiguration implements IDateTimeAltParserConfiguration {
 
+    private final IDateTimeParser dateTimeParser;
+    private final IDateTimeParser dateParser;
+    private final IDateTimeParser timeParser;
+    private final IDateTimeParser dateTimePeriodParser;
+    private final IDateTimeParser timePeriodParser;
+    private final IDateTimeParser datePeriodParser;
+
     public EnglishDateTimeAltParserConfiguration(ICommonDateTimeParserConfiguration config) {
         dateTimeParser = config.getDateTimeParser();
         dateParser = config.getDateParser();
@@ -14,17 +21,28 @@ public class EnglishDateTimeAltParserConfiguration implements IDateTimeAltParser
         timePeriodParser = config.getTimePeriodParser();
         datePeriodParser = config.getDatePeriodParser();
     }
-    private final IDateTimeParser dateTimeParser;
-    private final IDateTimeParser dateParser;
-    private final IDateTimeParser timeParser;
-    private final IDateTimeParser dateTimePeriodParser;
-    private final IDateTimeParser timePeriodParser;
-    private final IDateTimeParser datePeriodParser;
 
-    public IDateTimeParser getDateTimeParser() { return dateTimeParser; }
-    public IDateTimeParser getDateParser() { return dateParser; }
-    public IDateTimeParser getTimeParser() { return timeParser; }
-    public IDateTimeParser getDateTimePeriodParser() { return dateTimePeriodParser; }
-    public IDateTimeParser getTimePeriodParser() { return timePeriodParser; }
-    public IDateTimeParser getDatePeriodParser() { return datePeriodParser; }
+    public IDateTimeParser getDateTimeParser() {
+        return dateTimeParser;
+    }
+
+    public IDateTimeParser getDateParser() {
+        return dateParser;
+    }
+
+    public IDateTimeParser getTimeParser() {
+        return timeParser;
+    }
+
+    public IDateTimeParser getDateTimePeriodParser() {
+        return dateTimePeriodParser;
+    }
+
+    public IDateTimeParser getTimePeriodParser() {
+        return timePeriodParser;
+    }
+
+    public IDateTimeParser getDatePeriodParser() {
+        return datePeriodParser;
+    }
 }
