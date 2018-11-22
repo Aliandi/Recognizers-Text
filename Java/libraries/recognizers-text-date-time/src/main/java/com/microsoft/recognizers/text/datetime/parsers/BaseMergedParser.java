@@ -7,11 +7,11 @@ import com.microsoft.recognizers.text.datetime.parsers.config.IMergedParserConfi
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BaseMergedDateTimeParser implements IDateTimeParser {
+public class BaseMergedParser implements IDateTimeParser {
 
     private final IMergedParserConfiguration config;
 
-    public BaseMergedDateTimeParser(IMergedParserConfiguration config) {
+    public BaseMergedParser(IMergedParserConfiguration config) {
         this.config = config;
     }
 
