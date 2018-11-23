@@ -281,6 +281,8 @@ public class BaseMergedParser implements IDateTimeParser {
         return results;
     }
 
-
+    public SortedMap<String, Object> dateTimeResolution(DateTimeParseResult slot) {
+        
+    }
 
 }
