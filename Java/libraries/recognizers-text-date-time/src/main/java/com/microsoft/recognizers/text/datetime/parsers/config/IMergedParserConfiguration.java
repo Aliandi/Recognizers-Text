@@ -6,7 +6,7 @@ import com.microsoft.recognizers.text.matcher.StringMatcher;
 
 import java.util.regex.Pattern;
 
-public interface IMergedParserConfiguration extends IOptionsConfiguration {
+public interface IMergedParserConfiguration extends ICommonDateTimeParserConfiguration {
     Pattern getBeforeRegex();
 
     Pattern getAfterRegex();
