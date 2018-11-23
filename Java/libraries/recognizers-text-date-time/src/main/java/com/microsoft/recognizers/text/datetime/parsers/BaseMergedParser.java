@@ -2,12 +2,16 @@ package com.microsoft.recognizers.text.datetime.parsers;
 
 import com.microsoft.recognizers.text.ExtractResult;
 import com.microsoft.recognizers.text.ParseResult;
+import com.microsoft.recognizers.text.ResolutionKey;
 import com.microsoft.recognizers.text.datetime.Constants;
 import com.microsoft.recognizers.text.datetime.DateTimeOptions;
+import com.microsoft.recognizers.text.datetime.DateTimeResolutionKey;
+import com.microsoft.recognizers.text.datetime.TimeTypeConstants;
 import com.microsoft.recognizers.text.datetime.parsers.config.IMergedParserConfiguration;
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeResolutionResult;
 import com.microsoft.recognizers.text.datetime.utilities.FormatUtil;
 import com.microsoft.recognizers.text.datetime.utilities.MatchingUtil;
+import com.microsoft.recognizers.text.datetime.utilities.TimexUtility;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.StringUtility;
@@ -15,8 +19,12 @@ import com.microsoft.recognizers.text.utilities.StringUtility;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 
 public class BaseMergedParser implements IDateTimeParser {
@@ -282,7 +290,255 @@ public class BaseMergedParser implements IDateTimeParser {
     }
 
     public SortedMap<String, Object> dateTimeResolution(DateTimeParseResult slot) {
-        
+        return null;
     }
 
+    private String determineResolutionDateTimeType(LinkedHashMap<String, String> pastResolutionStr) {
+        switch (pastResolutionStr.keySet().stream().findFirst().get()) {
+            case TimeTypeConstants.START_DATE:
+                return Constants.SYS_DATETIME_DATEPERIOD;
+            case TimeTypeConstants.START_DATETIME:
+                return Constants.SYS_DATETIME_DATETIMEPERIOD;
+            case TimeTypeConstants.START_TIME:
+                return Constants.SYS_DATETIME_TIMEPERIOD;
+            default:
+                return pastResolutionStr.keySet().stream().findFirst().get().toLowerCase();
+        }
+    }
+
+    private void addResolutionFields(Map<String, Object> dic, String key, Object value) {
+        if (value instanceof String) {
+            if (!StringUtility.isNullOrEmpty((String)value)) {
+                dic.put(key, value);
+            }
+        } else {
+            dic.put(key, value);
+        }
+    }
+
+    private void addResolutionFields(Map<String, String> dic, String key, String value) {
+        if (!StringUtility.isNullOrEmpty(value)) {
+            dic.put(key, value);
+        }
+    }
+
+    private void resolveAmPm(Map<String, Object> resolutionDic, String keyName) {
+        if (resolutionDic.containsKey(keyName)) {
+            Map<String, String> resolution = (Map<String, String>) resolutionDic.get(keyName);
+
+            Map<String, String> resolutionPm = new HashMap<>();
+
+            if (!resolutionDic.containsKey(DateTimeResolutionKey.Timex)) {
+                return;
+            }
+
+            String timex = (String) resolutionDic.get(DateTimeResolutionKey.Timex);
+
+            resolutionDic.remove(keyName);
+            resolutionDic.put(keyName + "Am", resolution);
+
+            switch ((String) resolutionDic.get(ResolutionKey.Type)) {
+                case Constants.SYS_DATETIME_TIME:
+                    resolutionPm.put(ResolutionKey.Value, FormatUtil.toPm(resolution.get(ResolutionKey.Value)));
+                    resolutionPm.put(DateTimeResolutionKey.Timex, FormatUtil.toPm(timex));
+                    break;
+                case Constants.SYS_DATETIME_DATETIME:
+                    String[] splited = resolution.get(ResolutionKey.Value).split(" ");
+                    resolutionPm.put(ResolutionKey.Value, splited[0] + FormatUtil.toPm(splited[1]));
+                    resolutionPm.put(DateTimeResolutionKey.Timex, FormatUtil.allStringToPm(timex));
+                    break;
+                case Constants.SYS_DATETIME_TIMEPERIOD:
+                    if (resolution.containsKey(DateTimeResolutionKey.START)) {
+                        resolutionPm.put(DateTimeResolutionKey.START, FormatUtil.toPm(resolution.get(DateTimeResolutionKey.START)));
+                    }
+
+                    if (resolution.containsKey(DateTimeResolutionKey.END)) {
+                        resolutionPm.put(DateTimeResolutionKey.END, FormatUtil.toPm(resolution.get(DateTimeResolutionKey.END)));
+                    }
+
+                    resolutionPm.put(DateTimeResolutionKey.Timex, FormatUtil.allStringToPm(timex));
+                    break;
+                case Constants.SYS_DATETIME_DATETIMEPERIOD:
+                    if (resolution.containsKey(DateTimeResolutionKey.START)) {
+                        LocalDateTime start = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.START));
+                        start = start.getHour() == Constants.HalfDayHourCount ? start.minusHours(Constants.HalfDayHourCount) : start.plusHours(Constants.HalfDayHourCount);
+
+                        resolutionPm.put(DateTimeResolutionKey.START, FormatUtil.formatDateTime(start));
+                    }
+
+                    if (resolution.containsKey(DateTimeResolutionKey.END)) {
+                        LocalDateTime end = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.END));
+                        end = end.getHour() == Constants.HalfDayHourCount ? end.minusHours(Constants.HalfDayHourCount) : end.plusHours(Constants.HalfDayHourCount);
+
+                        resolutionPm.put(DateTimeResolutionKey.END, FormatUtil.formatDateTime(end));
+                    }
+
+                    resolutionPm.put(DateTimeResolutionKey.Timex, FormatUtil.allStringToPm(timex));
+                    break;
+                default:
+                    break;
+            }
+            resolutionDic.put(keyName + "Pm", resolutionPm);
+        }
+    }
+
+    private void resolveWeekOf(Map<String, Object> resolutionDic, String keyName) {
+        if (resolutionDic.containsKey(keyName)) {
+            Map<String, String> resolution = (Map<String, String>) resolutionDic.get(keyName);
+
+            LocalDateTime monday = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.START));
+            resolution.put(DateTimeResolutionKey.Timex, TimexUtility.generateWeekTimex(monday));
+
+            resolutionDic.put(keyName, resolution);
+        }
+    }
+
+    private Map<String, String> generateResolution(String type, Map<String, String> resolutionDic, String mod) {
+        Map<String, String> res = new HashMap<>();
+
+        if (type.equals(Constants.SYS_DATETIME_DATETIME)) {
+            addSingleDateTimeToResolution(resolutionDic, TimeTypeConstants.DATETIME, mod, res);
+        } else if (type.equals(Constants.SYS_DATETIME_TIME)) {
+            addSingleDateTimeToResolution(resolutionDic, TimeTypeConstants.TIME, mod, res);
+        } else if (type.equals(Constants.SYS_DATETIME_DATE)) {
+            addSingleDateTimeToResolution(resolutionDic, TimeTypeConstants.DATE, mod, res);
+        } else if (type.equals(Constants.SYS_DATETIME_DURATION)) {
+            if (resolutionDic.containsKey(TimeTypeConstants.DURATION)) {
+                res.put(ResolutionKey.Value, resolutionDic.get(TimeTypeConstants.DURATION));
+            }
+        } else if (type.equals(Constants.SYS_DATETIME_TIMEPERIOD)) {
+            addPeriodToResolution(resolutionDic, TimeTypeConstants.START_TIME, TimeTypeConstants.END_TIME, mod, res);
+        } else if (type.equals(Constants.SYS_DATETIME_DATEPERIOD)) {
+            addPeriodToResolution(resolutionDic, TimeTypeConstants.START_DATE, TimeTypeConstants.END_DATE, mod, res);
+        } else if (type.equals(Constants.SYS_DATETIME_DATETIMEPERIOD)) {
+            addPeriodToResolution(resolutionDic, TimeTypeConstants.START_DATETIME, TimeTypeConstants.END_DATETIME, mod, res);
+        } else if (type.equals(Constants.SYS_DATETIME_DATETIMEALT)) {
+            // for a period
+            if (resolutionDic.size() > 2) {
+                addAltPeriodToResolution(resolutionDic, mod, res);
+            } else {
+                // for a datetime point
+                addAltSingleDateTimeToResolution(resolutionDic, TimeTypeConstants.DATETIMEALT, mod, res);
+            }
+        }
+
+        return res;
+    }
+
+    public void addAltPeriodToResolution(Map<String, String> resolutionDic, String mod, Map<String, String> res) {
+        if (resolutionDic.containsKey(TimeTypeConstants.START_DATETIME) && resolutionDic.containsKey(TimeTypeConstants.END_DATETIME)) {
+            addPeriodToResolution(resolutionDic, TimeTypeConstants.START_DATETIME, TimeTypeConstants.END_DATETIME, mod, res);
+        } else if (resolutionDic.containsKey(TimeTypeConstants.START_DATE) && resolutionDic.containsKey(TimeTypeConstants.END_DATE)) {
+            addPeriodToResolution(resolutionDic, TimeTypeConstants.START_DATE, TimeTypeConstants.END_DATE, mod, res);
+        } else if (resolutionDic.containsKey(TimeTypeConstants.START_TIME) && resolutionDic.containsKey(TimeTypeConstants.END_TIME)) {
+            addPeriodToResolution(resolutionDic, TimeTypeConstants.START_TIME, TimeTypeConstants.END_TIME, mod, res);
+        }
+    }
+
+    public void addAltSingleDateTimeToResolution(Map<String, String> resolutionDic, String type, String mod, Map<String, String> res) {
+        if (resolutionDic.containsKey(TimeTypeConstants.DATE)) {
+            addSingleDateTimeToResolution(resolutionDic, TimeTypeConstants.DATE, mod, res);
+        } else if (resolutionDic.containsKey(TimeTypeConstants.DATETIME)) {
+            addSingleDateTimeToResolution(resolutionDic, TimeTypeConstants.DATETIME, mod, res);
+        } else if (resolutionDic.containsKey(TimeTypeConstants.TIME)) {
+            addSingleDateTimeToResolution(resolutionDic, TimeTypeConstants.TIME, mod, res);
+        }
+    }
+
+    public void addSingleDateTimeToResolution(Map<String, String> resolutionDic, String type, String mod, Map<String, String> res) {
+        if (resolutionDic.containsKey(type) && !resolutionDic.get(type).equals(dateMinString) && !resolutionDic.get(type).equals(dateTimeMinString)) {
+            if (!StringUtility.isNullOrEmpty(mod)) {
+                if (mod.equals(Constants.BEFORE_MOD)) {
+                    res.put(DateTimeResolutionKey.END, resolutionDic.get(type));
+                    return;
+                }
+
+                if (mod.equals(Constants.AFTER_MOD)) {
+                    res.put(DateTimeResolutionKey.START, resolutionDic.get(type));
+                    return;
+                }
+
+                if (mod.equals(Constants.SINCE_MOD)) {
+                    res.put(DateTimeResolutionKey.START, resolutionDic.get(type));
+                    return;
+                }
+
+                if (mod.equals(Constants.UNTIL_MOD)) {
+                    res.put(DateTimeResolutionKey.END, resolutionDic.get(type));
+                    return;
+                }
+            }
+
+            res.put(ResolutionKey.Value, resolutionDic.get(type));
+        }
+    }
+
+    public void addPeriodToResolution(Map<String, String> resolutionDic, String startType, String endType, String mod, Map<String, String> res) {
+        String start = "";
+        String end = "";
+
+        if (resolutionDic.containsKey(startType)) {
+            start = resolutionDic.get(startType);
+        }
+
+        if (resolutionDic.containsKey(endType)) {
+            end = resolutionDic.get(endType);
+        }
+
+        if (!StringUtility.isNullOrEmpty(mod)) {
+            // For the 'before' mod
+            // 1. Cases like "Before December", the start of the period should be the end of the new period, not the start
+            // 2. Cases like "More than 3 days before today", the date point should be the end of the new period
+            if (mod.equals(Constants.BEFORE_MOD)) {
+                if (!StringUtility.isNullOrEmpty(start) && !StringUtility.isNullOrEmpty(end)) {
+                    res.put(DateTimeResolutionKey.END, start);
+                } else {
+                    res.put(DateTimeResolutionKey.END, end);
+                }
+                
+                return;
+            }
+
+            // For the 'after' mod
+            // 1. Cases like "After January", the end of the period should be the start of the new period, not the end 
+            // 2. Cases like "More than 3 days after today", the date point should be the start of the new period
+            if (mod.equals(Constants.AFTER_MOD)) {
+                // For cases like "After January" or "After 2018"
+                // The "end" of the period is not inclusive by default ("January", the end should be "XXXX-02-01" / "2018", the end should be "2019-01-01")
+                // Mod "after" is also not inclusive the "start" ("After January", the start should be "XXXX-01-31" / "After 2018", the start should be "2017-12-31")
+                // So here the START day should be the inclusive end of the period, which is one day previous to the default end (exclusive end)
+                if (!StringUtility.isNullOrEmpty(start) && !StringUtility.isNullOrEmpty(end)) {
+                    res.put(DateTimeResolutionKey.START, getPreviousDay(end));
+                } else {
+                    res.put(DateTimeResolutionKey.START, start);
+                }
+                
+                return;
+            }
+
+            // For the 'since' mod, the start of the period should be the start of the new period, not the end 
+            if (mod.equals(Constants.SINCE_MOD)) {
+                res.put(DateTimeResolutionKey.START, start);
+                return;
+            }
+
+            // For the 'until' mod, the end of the period should be the end of the new period, not the start 
+            if (mod.equals(Constants.UNTIL_MOD)) {
+                res.put(DateTimeResolutionKey.END, end);
+                return;
+            }
+        }
+
+        if (!StringUtility.isNullOrEmpty(start) && !StringUtility.isNullOrEmpty(end)) {
+            res.put(DateTimeResolutionKey.START, start);
+            res.put(DateTimeResolutionKey.END, end);
+        }
+    }
+
+    public String getPreviousDay(String dateStr) {
+        // Here the dateString is in standard format, so Parse should work perfectly
+        LocalDateTime date = LocalDateTime.parse(dateStr)
+            .minusDays(1);
+        return FormatUtil.luisDate(date);
+    }
 }
