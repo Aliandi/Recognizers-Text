@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class BaseMergedParser implements IDateTimeParser {
@@ -205,7 +206,7 @@ public class BaseMergedParser implements IDateTimeParser {
             pr = setParseResult(pr, hasModifier);
         }
 
-        if (this.config.getOptions().match(DateTimeOptions.EnablePreview) {
+        if (this.config.getOptions().match(DateTimeOptions.EnablePreview)) {
             pr = (DateTimeParseResult) pr.withLength(pr.length + originText.length() - pr.text.length())
                 .withText(originText);
         }
@@ -239,7 +240,7 @@ public class BaseMergedParser implements IDateTimeParser {
     }
 
     public DateTimeParseResult setParseResult(DateTimeParseResult slot, boolean hasMod) {
-        slot = slot.withValue(dateTimeResolution(slot));
+        slot = (DateTimeParseResult)slot.withValue(dateTimeResolution(slot));
 
         // Change the type at last for the after or before modes
         slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, hasMod)));
@@ -281,7 +282,7 @@ public class BaseMergedParser implements IDateTimeParser {
                 results.addAll(dateTimeResolutionForSplit(result));
             }
         } else {
-            slot = slot.withValue(dateTimeResolution(slot))
+            slot = (DateTimeParseResult)slot.withValue(dateTimeResolution(slot))
                 .withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, false)));
             results.add(slot);
         }
@@ -290,7 +291,139 @@ public class BaseMergedParser implements IDateTimeParser {
     }
 
     public SortedMap<String, Object> dateTimeResolution(DateTimeParseResult slot) {
-        return null;
+        if (slot == null) {
+            return null;
+        }
+
+        List<HashMap<String, String>> resolutions = new ArrayList<>();
+        Map<String, Object> res = new HashMap<>();
+
+        String type = slot.type;
+        String timex = slot.timexStr;
+
+        DateTimeResolutionResult val = (DateTimeResolutionResult) slot.value;
+        if (val == null) {
+            return null;
+        }
+
+        Boolean islunar = val.getIsLunar();
+        String mod = val.getMod();
+
+        // With modifier, output Type might not be the same with type in resolution result
+        // For example, if the resolution type is "date", with modifier the output type should be "daterange"
+        String typeOutput = determineDateTimeType(slot.type, !StringUtility.isNullOrEmpty(mod));
+        String comment = val.getComment();
+
+        // The following should be added to res first, since ResolveAmPm requires these fields.
+        addResolutionFields(res, DateTimeResolutionKey.Timex, timex);
+        addResolutionFields(res, Constants.Comment, comment);
+        addResolutionFields(res, DateTimeResolutionKey.Mod, mod);
+        addResolutionFields(res, ResolutionKey.Type, typeOutput);
+        addResolutionFields(res, DateTimeResolutionKey.IsLunar, islunar? islunar.toString() : "");
+
+        boolean hasTimeZone = false;
+
+        // For standalone timezone entity recognition, we generate TimeZoneResolution for each entity we extracted.
+        // We also merge time entity with timezone entity and add the information in TimeZoneResolution to every DateTime resolutions.
+        if (val.getTimeZoneResolution() != null) {
+            if (slot.type.equals(Constants.SYS_DATETIME_TIMEZONE)) {
+                // single timezone
+                Map<String, String> resolutionField = new HashMap<>();
+                resolutionField.put(ResolutionKey.Value, val.getTimeZoneResolution().getValue());
+                resolutionField.put(Constants.UtcOffsetMinsKey, val.getTimeZoneResolution().getUtcOffsetMins().toString());
+
+                addResolutionFields(res, Constants.ResolveTimeZone, resolutionField);
+            } else {
+                // timezone as clarification of datetime
+                hasTimeZone = true;
+                addResolutionFields(res, Constants.TimeZone, val.getTimeZoneResolution().getValue());
+                addResolutionFields(res, Constants.TimeZoneText, val.getTimeZoneResolution().getTimeZoneText());
+                addResolutionFields(res, Constants.UtcOffsetMinsKey, val.getTimeZoneResolution().getUtcOffsetMins().toString());
+            }
+        }
+
+        LinkedHashMap<String, String> pastResolutionStr = (LinkedHashMap<String, String>)((DateTimeResolutionResult) slot.value).getPastResolution();
+        Map<String, String> futureResolutionStr = ((DateTimeResolutionResult) slot.value).getFutureResolution();
+
+        if (typeOutput.equals(Constants.SYS_DATETIME_DATETIMEALT) && pastResolutionStr.size() > 0) {
+            typeOutput = determineResolutionDateTimeType(pastResolutionStr);
+        }
+
+        Map<String, String> resolutionPast = generateResolution(type, pastResolutionStr, mod);
+        Map<String, String> resolutionFuture = generateResolution(type, futureResolutionStr, mod);
+
+        // TODO: test this line ---> resolutionFuture.entrySet().stream().sorted(Comparator.comparing(t -> t.getKey())).map( v -> v.getValue()).equals(resolutionPast.entrySet().stream().sorted(Comparator.comparing(t -> t.getKey())).map(v -> v.getValue()));
+        // or this one resolutionFuture.equals(resolutionPast)
+
+        // If past and future are same, keep only one
+        if (resolutionFuture.equals(resolutionPast)) {
+            if (resolutionPast.size() > 0)
+            {
+                addResolutionFields(res, Constants.Resolve, resolutionPast);
+            }
+        } else {
+            if (resolutionPast.size() > 0)
+            {
+                addResolutionFields(res, Constants.ResolveToPast, resolutionPast);
+            }
+
+            if (resolutionFuture.size() > 0) {
+                addResolutionFields(res, Constants.ResolveToFuture, resolutionFuture);
+            }
+        }
+
+        // If 'ampm', double our resolution accordingly
+        if (!StringUtility.isNullOrEmpty(comment) && comment.equals(Constants.Comment_AmPm)) {
+            if (res.containsKey(Constants.Resolve)) {
+                resolveAmPm(res, Constants.Resolve);
+            } else {
+                resolveAmPm(res, Constants.ResolveToPast);
+                resolveAmPm(res, Constants.ResolveToFuture);
+            }
+        }
+
+        // If WeekOf and in CalendarMode, modify the past part of our resolution
+        if (config.getOptions().match(DateTimeOptions.CalendarMode) &&
+                !StringUtility.isNullOrEmpty(comment) && comment.equals(Constants.Comment_WeekOf)) {
+            resolveWeekOf(res, Constants.ResolveToPast);
+        }
+
+        for (Map.Entry<String,Object> p : res.entrySet()) {
+            if (p.getValue() instanceof Map) {
+                HashMap<String, String> value = new HashMap<>();
+
+                addResolutionFields(value, DateTimeResolutionKey.Timex, timex);
+                addResolutionFields(value, DateTimeResolutionKey.Mod, mod);
+                addResolutionFields(value, ResolutionKey.Type, typeOutput);
+                addResolutionFields(value, DateTimeResolutionKey.IsLunar, islunar ? islunar.toString() : "");
+
+                if (hasTimeZone) {
+                    addResolutionFields(value, Constants.TimeZone, val.getTimeZoneResolution().getValue());
+                    addResolutionFields(value, Constants.TimeZoneText, val.getTimeZoneResolution().getTimeZoneText());
+                    addResolutionFields(value, Constants.UtcOffsetMinsKey, val.getTimeZoneResolution().getUtcOffsetMins().toString());
+                }
+
+                for (Map.Entry<String, String> q : ((Map<String, String>)p.getValue()).entrySet()) {
+                    value.put(q.getKey(),q.getValue());
+                }
+
+                resolutions.add(value);
+            }
+        }
+
+        if (resolutionPast.size() == 0 && resolutionFuture.size() == 0 && val.getTimeZoneResolution() == null) {
+            HashMap<String, String> notResolved = new HashMap<>();
+            notResolved.put(DateTimeResolutionKey.Timex, timex);
+            notResolved.put(ResolutionKey.Type, typeOutput);
+            notResolved.put(ResolutionKey.Value, "not resolved");
+
+            resolutions.add(notResolved);
+        }
+
+        SortedMap<String, Object> result = new TreeMap<>();
+        result.put(ResolutionKey.ValueSet, resolutions);
+
+        return result;
     }
 
     private String determineResolutionDateTimeType(LinkedHashMap<String, String> pastResolutionStr) {
