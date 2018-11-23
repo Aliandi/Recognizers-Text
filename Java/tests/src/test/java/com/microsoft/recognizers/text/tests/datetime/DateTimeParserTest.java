@@ -1,6 +1,7 @@
 package com.microsoft.recognizers.text.tests.datetime;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.recognizers.text.Culture;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -76,15 +78,32 @@ public class DateTimeParserTest extends AbstractTest {
 					Assert.assertEquals(getMessage(currentCase, "start"), expected.start, actual.start);
 					Assert.assertEquals(getMessage(currentCase, "length"), expected.length, actual.length);
 
-					if (expected.value != null) {
-						DateTimeResolutionResult expectedValue = parseDateTimeResolutionResult(DateTimeResolutionResult.class, expected.value);
-						DateTimeResolutionResult actualValue = (DateTimeResolutionResult) actual.value;
-
-						Assert.assertEquals(getMessage(currentCase, "timex"), expectedValue.getTimex(), actualValue.getTimex());
-						Assert.assertEquals(getMessage(currentCase, "futureResolution"), expectedValue.getFutureResolution(), actualValue.getFutureResolution());
-						Assert.assertEquals(getMessage(currentCase, "pastResolution"), expectedValue.getPastResolution(), actualValue.getPastResolution());
+					if (currentCase.modelName.equals("MergedParser")) {
+						assertMergedParserResults(currentCase, expected, actual);
+					} else {
+						assertParserResults(currentCase, expected, actual);
 					}
 				});
+	}
+
+	private static void assertParserResults(TestCase currentCase, DateTimeParseResult expected, DateTimeParseResult actual) {
+		if (expected.value != null) {
+			DateTimeResolutionResult expectedValue = parseDateTimeResolutionResult(DateTimeResolutionResult.class, expected.value);
+			DateTimeResolutionResult actualValue = (DateTimeResolutionResult) actual.value;
+
+			Assert.assertEquals(getMessage(currentCase, "timex"), expectedValue.getTimex(), actualValue.getTimex());
+			Assert.assertEquals(getMessage(currentCase, "futureResolution"), expectedValue.getFutureResolution(), actualValue.getFutureResolution());
+			Assert.assertEquals(getMessage(currentCase, "pastResolution"), expectedValue.getPastResolution(), actualValue.getPastResolution());
+		}
+	}
+
+	private static void assertMergedParserResults(TestCase currentCase, DateTimeParseResult expected, DateTimeParseResult actual) {
+		if (expected.value != null) {
+			Map<String, List<Map<String, Object>>> expectedValue = parseDateTimeResolutionResult(expected.value);
+			Map<String, List<Map<String, Object>>> actualValue = (Map<String, List<Map<String, Object>>>) actual.value;
+
+			Assert.assertEquals(getMessage(currentCase, "timex"), expectedValue, actualValue);
+		}
 	}
 
   	private static IDateTimeParser getParser(TestCase currentCase) {
@@ -148,6 +167,24 @@ public class DateTimeParserTest extends AbstractTest {
 		try {
 			String json = mapper.writeValueAsString(result);
 			return mapper.readValue(json, dateTimeResolutionResultClass);
+
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return null;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static <T extends Map> T parseDateTimeResolutionResult(Object result) {
+		// Deserializer
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			String json = mapper.writeValueAsString(result);
+			return mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
 
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
