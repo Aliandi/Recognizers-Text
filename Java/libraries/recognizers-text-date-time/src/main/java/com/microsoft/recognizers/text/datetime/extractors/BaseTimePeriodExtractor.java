@@ -55,7 +55,7 @@ public class BaseTimePeriodExtractor implements IDateTimeExtractor {
 
             for (Match match: matches) {
                 // Cases like "from 10:30 to 11", don't necessarily need "am/pm"
-                if (match.getGroup(Constants.MinuteGroupName).value != null || match.getGroup(Constants.SecondGroupName).value != null) {
+                if (!match.getGroup(Constants.MinuteGroupName).value.equals("") || !match.getGroup(Constants.SecondGroupName).value.equals("")) {
                     // Cases like "from 3:30 to 4" should be supported
                     // Cases like "from 3:30 to 4 on 1/1/2015" should be supported
                     // Cases like "from 3:30 to 4 people" is considered not valid

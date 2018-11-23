@@ -9,6 +9,7 @@ import com.microsoft.recognizers.text.datetime.DateTimeResolutionKey;
 import com.microsoft.recognizers.text.datetime.TimeTypeConstants;
 import com.microsoft.recognizers.text.datetime.parsers.config.IMergedParserConfiguration;
 import com.microsoft.recognizers.text.datetime.utilities.DateTimeResolutionResult;
+import com.microsoft.recognizers.text.datetime.utilities.DateUtil;
 import com.microsoft.recognizers.text.datetime.utilities.FormatUtil;
 import com.microsoft.recognizers.text.datetime.utilities.MatchingUtil;
 import com.microsoft.recognizers.text.datetime.utilities.TimexUtility;
@@ -17,6 +18,7 @@ import com.microsoft.recognizers.text.utilities.RegExpUtility;
 import com.microsoft.recognizers.text.utilities.StringUtility;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -151,9 +153,11 @@ public class BaseMergedParser implements IDateTimeParser {
 
         // Pop, restore the MOD string
         if (hasBefore && pr != null && pr.value != null) {
-            pr = (DateTimeParseResult) pr.withLength(pr.length + modStr.length())
-                .withStart(pr.start - modStr.length())
-                .withText(modStr + pr.text);
+            pr = new DateTimeParseResult(new ParseResult(
+                    pr.withStart(pr.start - modStr.length())
+                    .withText(modStr + pr.text))
+                    .withLength(pr.length + modStr.length())
+                    .withValue(pr.value));
             DateTimeResolutionResult val = (DateTimeResolutionResult) pr.value;
 
             if (!hasInclusiveModifier) {
@@ -162,13 +166,15 @@ public class BaseMergedParser implements IDateTimeParser {
                 val.setMod(Constants.UNTIL_MOD);
             }
 
-            pr = (DateTimeParseResult) pr.withValue(val);
+            pr = new DateTimeParseResult(pr.withValue(val));
         }
 
         if (hasAfter && pr != null && pr.value != null) {
-            pr = (DateTimeParseResult) pr.withLength(pr.length + modStr.length())
-                .withStart(pr.start - modStr.length())
-                .withText(modStr + pr.text);
+            pr = new DateTimeParseResult(new ParseResult(
+                    pr.withStart(pr.start - modStr.length())
+                    .withText(modStr + pr.text))
+                    .withLength(pr.length + modStr.length())
+                    .withValue(pr.value));
             DateTimeResolutionResult val = (DateTimeResolutionResult) pr.value;
 
             if (!hasInclusiveModifier) {
@@ -177,38 +183,42 @@ public class BaseMergedParser implements IDateTimeParser {
                 val.setMod(Constants.SINCE_MOD);
             }
 
-            pr = (DateTimeParseResult) pr.withValue(val);
+            pr = new DateTimeParseResult(pr.withValue(val));
         }
 
         if (hasSince && pr != null && pr.value != null) {
-            pr = (DateTimeParseResult) pr.withLength(pr.length + modStr.length())
-                .withStart(pr.start - modStr.length())
-                .withText(modStr + pr.text);
+            pr = new DateTimeParseResult(new ParseResult(
+                    pr.withStart(pr.start - modStr.length())
+                    .withText(modStr + pr.text))
+                    .withLength(pr.length + modStr.length())
+                    .withValue(pr.value));
             DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
             val.setMod( Constants.SINCE_MOD);
-            pr = (DateTimeParseResult) pr.withValue(val);
+            pr = new DateTimeParseResult(pr.withValue(val));
         }
 
         if (hasYearAfter && pr != null && pr.value != null) {
-            pr = (DateTimeParseResult) pr.withLength(pr.length + modStr.length())
-                .withText(pr.text + modStr);
+            pr = new DateTimeParseResult(new ParseResult(
+                    pr.withLength(pr.length + modStr.length())
+                    .withText(pr.text + modStr)));
             DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
             val.setMod(Constants.SINCE_MOD);
-            pr = (DateTimeParseResult) pr.withValue(val);
+            pr = new DateTimeParseResult(pr.withValue(val));
             hasSince = true;
         }
 
         if (config.getOptions().match(DateTimeOptions.SplitDateAndTime) && pr != null && pr.value != null &&
                 ((DateTimeResolutionResult)pr.value).getSubDateTimeEntities() != null) {
-            pr = (DateTimeParseResult) pr.withValue(dateTimeResolutionForSplit(pr));
+            pr = new DateTimeParseResult(pr.withValue(dateTimeResolutionForSplit(pr)));
         } else {
             boolean hasModifier = hasBefore || hasAfter || hasSince;
             pr = setParseResult(pr, hasModifier);
         }
 
         if (this.config.getOptions().match(DateTimeOptions.EnablePreview)) {
-            pr = (DateTimeParseResult) pr.withLength(pr.length + originText.length() - pr.text.length())
-                .withText(originText);
+            pr = new DateTimeParseResult(new ParseResult(
+                    pr.withLength(pr.length + originText.length() - pr.text.length())
+                    .withText(originText)));
         }
 
         return pr;
@@ -240,10 +250,12 @@ public class BaseMergedParser implements IDateTimeParser {
     }
 
     public DateTimeParseResult setParseResult(DateTimeParseResult slot, boolean hasMod) {
-        slot = (DateTimeParseResult)slot.withValue(dateTimeResolution(slot));
+        slot = new DateTimeParseResult(new ParseResult(
+                    // Change the type at last for the after or before modes
+                    slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, hasMod))))
+                .withValue(dateTimeResolution(slot)));
 
-        // Change the type at last for the after or before modes
-        slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, hasMod)));
+
 
         return slot;
     }
@@ -282,8 +294,9 @@ public class BaseMergedParser implements IDateTimeParser {
                 results.addAll(dateTimeResolutionForSplit(result));
             }
         } else {
-            slot = (DateTimeParseResult)slot.withValue(dateTimeResolution(slot))
-                .withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, false)));
+            slot = new DateTimeParseResult( new ParseResult(
+                    slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, false))))
+                    .withValue(dateTimeResolution(slot)));
             results.add(slot);
         }
 
@@ -306,7 +319,7 @@ public class BaseMergedParser implements IDateTimeParser {
             return null;
         }
 
-        Boolean islunar = val.getIsLunar();
+        Boolean islunar = val.getIsLunar() != null ? val.getIsLunar() : false;
         String mod = val.getMod();
 
         // With modifier, output Type might not be the same with type in resolution result
@@ -341,8 +354,8 @@ public class BaseMergedParser implements IDateTimeParser {
                 addResolutionFields(res, Constants.UtcOffsetMinsKey, val.getTimeZoneResolution().getUtcOffsetMins().toString());
             }
         }
-
-        LinkedHashMap<String, String> pastResolutionStr = (LinkedHashMap<String, String>)((DateTimeResolutionResult) slot.value).getPastResolution();
+        LinkedHashMap<String, String> pastResolutionStr = new LinkedHashMap<>();
+        pastResolutionStr.putAll(((DateTimeResolutionResult) slot.value).getPastResolution());
         Map<String, String> futureResolutionStr = ((DateTimeResolutionResult) slot.value).getFutureResolution();
 
         if (typeOutput.equals(Constants.SYS_DATETIME_DATETIMEALT) && pastResolutionStr.size() > 0) {
@@ -466,6 +479,7 @@ public class BaseMergedParser implements IDateTimeParser {
             }
 
             String timex = (String) resolutionDic.get(DateTimeResolutionKey.Timex);
+            timex = timex != null ? timex : "";
 
             resolutionDic.remove(keyName);
             resolutionDic.put(keyName + "Am", resolution);
@@ -493,14 +507,14 @@ public class BaseMergedParser implements IDateTimeParser {
                     break;
                 case Constants.SYS_DATETIME_DATETIMEPERIOD:
                     if (resolution.containsKey(DateTimeResolutionKey.START)) {
-                        LocalDateTime start = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.START));
+                        LocalDateTime start = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.START), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                         start = start.getHour() == Constants.HalfDayHourCount ? start.minusHours(Constants.HalfDayHourCount) : start.plusHours(Constants.HalfDayHourCount);
 
                         resolutionPm.put(DateTimeResolutionKey.START, FormatUtil.formatDateTime(start));
                     }
 
                     if (resolution.containsKey(DateTimeResolutionKey.END)) {
-                        LocalDateTime end = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.END));
+                        LocalDateTime end = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.END), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                         end = end.getHour() == Constants.HalfDayHourCount ? end.minusHours(Constants.HalfDayHourCount) : end.plusHours(Constants.HalfDayHourCount);
 
                         resolutionPm.put(DateTimeResolutionKey.END, FormatUtil.formatDateTime(end));
@@ -670,7 +684,7 @@ public class BaseMergedParser implements IDateTimeParser {
 
     public String getPreviousDay(String dateStr) {
         // Here the dateString is in standard format, so Parse should work perfectly
-        LocalDateTime date = LocalDateTime.parse(dateStr)
+        LocalDateTime date = DateUtil.tryParse(dateStr)
             .minusDays(1);
         return FormatUtil.luisDate(date);
     }
