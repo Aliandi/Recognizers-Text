@@ -26,6 +26,7 @@ import org.junit.runners.Parameterized;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,7 +103,24 @@ public class DateTimeParserTest extends AbstractTest {
 			Map<String, List<Map<String, Object>>> expectedValue = parseDateTimeResolutionResult(expected.value);
 			Map<String, List<Map<String, Object>>> actualValue = (Map<String, List<Map<String, Object>>>) actual.value;
 
-			Assert.assertEquals(getMessage(currentCase, "timex"), expectedValue, actualValue);
+			List<Map<String, Object>> expectedResults = expectedValue.get("values");
+			List<Map<String, Object>> actualResults = actualValue.get("values");
+
+			expectedResults.sort(Comparator.comparingInt(Map::hashCode));
+			actualResults.sort(Comparator.comparingInt(Map::hashCode));
+
+			Assert.assertEquals("Actual results size differs", expectedResults.size(), actualResults.size());
+
+			IntStream.range(0, expectedResults.size()).mapToObj(i -> new Pair<>(expectedResults.get(i), actualResults.get(i))).forEach(o -> {
+				Map<String, Object> expectedItem = o.getValue0();
+				Map<String, Object> actualItem = o.getValue0();
+				Assert.assertTrue("actual does not contains all expected keys", actualItem.keySet().containsAll(expectedItem.keySet()));
+				for (String key : expectedItem.keySet()) {
+					if (actualItem.containsKey(key)) {
+						Assert.assertEquals(getMessage(currentCase, "values." + key), expectedItem.get(key), actualItem.get(key));
+					}
+				}
+			});
 		}
 	}
 
