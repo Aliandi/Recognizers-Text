@@ -115,8 +115,8 @@ public class BaseMergedParser implements IDateTimeParser {
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getYearAfterRegex(),er.text)).findFirst();
             if (match.isPresent() && er.text.endsWith(match.get().value)) {
                 hasYearAfter = true;
-                er = er.withLength(er.length - match.get().length)
-                    .withText(er.length >0 ? er.text.substring(0, er.length) : "");
+                er = er.withLength(er.length - match.get().length);
+                er = er.withText(er.length >0 ? er.text.substring(0, er.length) : "");
                 modStr = match.get().value;
             }
         }
@@ -200,7 +200,8 @@ public class BaseMergedParser implements IDateTimeParser {
         if (hasYearAfter && pr != null && pr.value != null) {
             pr = new DateTimeParseResult(new ParseResult(
                     pr.withLength(pr.length + modStr.length())
-                    .withText(pr.text + modStr)));
+                    .withText(pr.text + modStr))
+                    .withValue(pr.value));
             DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
             val.setMod(Constants.SINCE_MOD);
             pr = new DateTimeParseResult(pr.withValue(val));
