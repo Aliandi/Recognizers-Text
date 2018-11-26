@@ -34,8 +34,8 @@ public class BaseMergedParser implements IDateTimeParser {
 
     private final String parserName = "datetimeV2";
     private final IMergedParserConfiguration config;
-    private static final String dateMinString = FormatUtil.formatDate(LocalDateTime.MIN);
-    private static final String dateTimeMinString = FormatUtil.formatDateTime(LocalDateTime.MIN);
+    private static final String dateMinString = FormatUtil.formatDate(DateUtil.minValue());
+    private static final String dateTimeMinString = FormatUtil.formatDateTime(DateUtil.minValue());
     //private static final Calendar Cal = DateTimeFormatInfo.InvariantInfo.Calendar;
 
     public BaseMergedParser(IMergedParserConfiguration config) {
