@@ -73,7 +73,10 @@ public class BaseMergedParser implements IDateTimeParser {
         }
 
         // Push, save the MOD string
-        boolean hasBefore = false, hasAfter = false, hasSince = false, hasYearAfter = false;
+        boolean hasBefore = false;
+        boolean hasAfter = false;
+        boolean hasSince = false;
+        boolean hasYearAfter = false;
 
         // "InclusiveModifier" means MOD should include the start/end time
         // For example, cases like "on or later than", "earlier than or in" have inclusive modifier
@@ -116,15 +119,14 @@ public class BaseMergedParser implements IDateTimeParser {
             if (match.isPresent() && er.text.endsWith(match.get().value)) {
                 hasYearAfter = true;
                 er = er.withLength(er.length - match.get().length);
-                er = er.withText(er.length >0 ? er.text.substring(0, er.length) : "");
+                er = er.withText(er.length > 0 ? er.text.substring(0, er.length) : "");
                 modStr = match.get().value;
             }
         }
 
         if (er.type.equals(Constants.SYS_DATETIME_DATE)) {
             pr = this.config.getDateParser().parse(er, reference);
-            if (pr.value == null)
-            {
+            if (pr.value == null) {
                 pr = config.getHolidayParser().parse(er, reference);
             }
         } else if (er.type.equals(Constants.SYS_DATETIME_TIME)) {
@@ -144,7 +146,7 @@ public class BaseMergedParser implements IDateTimeParser {
         } else if (er.type.equals(Constants.SYS_DATETIME_DATETIMEALT)) {
             pr = this.config.getDateTimeAltParser().parse(er, reference);
         } else if (er.type.equals(Constants.SYS_DATETIME_TIMEZONE)) {
-            if (config.getOptions().match(DateTimeOptions.EnablePreview)){
+            if (config.getOptions().match(DateTimeOptions.EnablePreview)) {
                 pr = this.config.getTimeZoneParser().parse(er, reference);
             }
         } else {
@@ -159,7 +161,7 @@ public class BaseMergedParser implements IDateTimeParser {
                     .withLength(pr.length + modStr.length())
                     .withValue(pr.value))
                     .withTimexStr(pr.timexStr);
-            DateTimeResolutionResult val = (DateTimeResolutionResult) pr.value;
+            DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
 
             if (!hasInclusiveModifier) {
                 val.setMod(Constants.BEFORE_MOD);
@@ -177,7 +179,7 @@ public class BaseMergedParser implements IDateTimeParser {
                     .withLength(pr.length + modStr.length())
                     .withValue(pr.value))
                     .withTimexStr(pr.timexStr);
-            DateTimeResolutionResult val = (DateTimeResolutionResult) pr.value;
+            DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
 
             if (!hasInclusiveModifier) {
                 val.setMod(Constants.AFTER_MOD);
@@ -196,7 +198,7 @@ public class BaseMergedParser implements IDateTimeParser {
                     .withValue(pr.value))
                     .withTimexStr(pr.timexStr);
             DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
-            val.setMod( Constants.SINCE_MOD);
+            val.setMod(Constants.SINCE_MOD);
             pr = new DateTimeParseResult(pr.withValue(val)).withTimexStr(pr.timexStr);
         }
 
@@ -293,15 +295,14 @@ public class BaseMergedParser implements IDateTimeParser {
 
     public List<DateTimeParseResult> dateTimeResolutionForSplit(DateTimeParseResult slot) {
         List<DateTimeParseResult> results = new ArrayList<>();
-        if (((DateTimeResolutionResult) slot.value).getSubDateTimeEntities() != null) {
-            List<Object> subEntities = ((DateTimeResolutionResult) slot.value).getSubDateTimeEntities();
-            for (Object subEntity : subEntities)
-            {
-                DateTimeParseResult result = (DateTimeParseResult) subEntity;
+        if (((DateTimeResolutionResult)slot.value).getSubDateTimeEntities() != null) {
+            List<Object> subEntities = ((DateTimeResolutionResult)slot.value).getSubDateTimeEntities();
+            for (Object subEntity : subEntities) {
+                DateTimeParseResult result = (DateTimeParseResult)subEntity;
                 results.addAll(dateTimeResolutionForSplit(result));
             }
         } else {
-            slot = new DateTimeParseResult( new ParseResult(
+            slot = new DateTimeParseResult(new ParseResult(
                     slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, false))))
                     .withValue(dateTimeResolution(slot)))
                     .withTimexStr(slot.timexStr);
@@ -322,7 +323,7 @@ public class BaseMergedParser implements IDateTimeParser {
         String type = slot.type;
         String timex = slot.timexStr;
 
-        DateTimeResolutionResult val = (DateTimeResolutionResult) slot.value;
+        DateTimeResolutionResult val = (DateTimeResolutionResult)slot.value;
         if (val == null) {
             return null;
         }
@@ -340,7 +341,7 @@ public class BaseMergedParser implements IDateTimeParser {
         addResolutionFields(res, Constants.Comment, comment);
         addResolutionFields(res, DateTimeResolutionKey.Mod, mod);
         addResolutionFields(res, ResolutionKey.Type, typeOutput);
-        addResolutionFields(res, DateTimeResolutionKey.IsLunar, islunar? islunar.toString() : "");
+        addResolutionFields(res, DateTimeResolutionKey.IsLunar, islunar ? islunar.toString() : "");
 
         boolean hasTimeZone = false;
 
@@ -363,8 +364,8 @@ public class BaseMergedParser implements IDateTimeParser {
             }
         }
         LinkedHashMap<String, String> pastResolutionStr = new LinkedHashMap<>();
-        pastResolutionStr.putAll(((DateTimeResolutionResult) slot.value).getPastResolution());
-        Map<String, String> futureResolutionStr = ((DateTimeResolutionResult) slot.value).getFutureResolution();
+        pastResolutionStr.putAll(((DateTimeResolutionResult)slot.value).getPastResolution());
+        Map<String, String> futureResolutionStr = ((DateTimeResolutionResult)slot.value).getFutureResolution();
 
         if (typeOutput.equals(Constants.SYS_DATETIME_DATETIMEALT) && pastResolutionStr.size() > 0) {
             typeOutput = determineResolutionDateTimeType(pastResolutionStr);
@@ -373,18 +374,13 @@ public class BaseMergedParser implements IDateTimeParser {
         Map<String, String> resolutionPast = generateResolution(type, pastResolutionStr, mod);
         Map<String, String> resolutionFuture = generateResolution(type, futureResolutionStr, mod);
 
-        // TODO: test this line ---> resolutionFuture.entrySet().stream().sorted(Comparator.comparing(t -> t.getKey())).map( v -> v.getValue()).equals(resolutionPast.entrySet().stream().sorted(Comparator.comparing(t -> t.getKey())).map(v -> v.getValue()));
-        // or this one resolutionFuture.equals(resolutionPast)
-
         // If past and future are same, keep only one
         if (resolutionFuture.equals(resolutionPast)) {
-            if (resolutionPast.size() > 0)
-            {
+            if (resolutionPast.size() > 0) {
                 addResolutionFields(res, Constants.Resolve, resolutionPast);
             }
         } else {
-            if (resolutionPast.size() > 0)
-            {
+            if (resolutionPast.size() > 0) {
                 addResolutionFields(res, Constants.ResolveToPast, resolutionPast);
             }
 
@@ -478,7 +474,7 @@ public class BaseMergedParser implements IDateTimeParser {
 
     private void resolveAmPm(Map<String, Object> resolutionDic, String keyName) {
         if (resolutionDic.containsKey(keyName)) {
-            Map<String, String> resolution = (Map<String, String>) resolutionDic.get(keyName);
+            Map<String, String> resolution = (Map<String, String>)resolutionDic.get(keyName);
 
             Map<String, String> resolutionPm = new HashMap<>();
 
@@ -486,13 +482,13 @@ public class BaseMergedParser implements IDateTimeParser {
                 return;
             }
 
-            String timex = (String) resolutionDic.get(DateTimeResolutionKey.Timex);
+            String timex = (String)resolutionDic.get(DateTimeResolutionKey.Timex);
             timex = timex != null ? timex : "";
 
             resolutionDic.remove(keyName);
             resolutionDic.put(keyName + "Am", resolution);
 
-            switch ((String) resolutionDic.get(ResolutionKey.Type)) {
+            switch ((String)resolutionDic.get(ResolutionKey.Type)) {
                 case Constants.SYS_DATETIME_TIME:
                     resolutionPm.put(ResolutionKey.Value, FormatUtil.toPm(resolution.get(ResolutionKey.Value)));
                     resolutionPm.put(DateTimeResolutionKey.Timex, FormatUtil.toPm(timex));
@@ -539,7 +535,7 @@ public class BaseMergedParser implements IDateTimeParser {
 
     private void resolveWeekOf(Map<String, Object> resolutionDic, String keyName) {
         if (resolutionDic.containsKey(keyName)) {
-            Map<String, String> resolution = (Map<String, String>) resolutionDic.get(keyName);
+            Map<String, String> resolution = (Map<String, String>)resolutionDic.get(keyName);
 
             LocalDateTime monday = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.START));
             resolution.put(DateTimeResolutionKey.Timex, TimexUtility.generateWeekTimex(monday));
