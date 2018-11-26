@@ -25,7 +25,6 @@
       {
         "Text": "5 years ago",
         "Start": 31,
-        "End": 41,
         "Type": "datetimeV2.date",
         "Value": {
           "values": [
