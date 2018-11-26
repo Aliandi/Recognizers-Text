@@ -157,7 +157,8 @@ public class BaseMergedParser implements IDateTimeParser {
                     pr.withStart(pr.start - modStr.length())
                     .withText(modStr + pr.text))
                     .withLength(pr.length + modStr.length())
-                    .withValue(pr.value));
+                    .withValue(pr.value))
+                    .withTimexStr(pr.timexStr);
             DateTimeResolutionResult val = (DateTimeResolutionResult) pr.value;
 
             if (!hasInclusiveModifier) {
@@ -166,7 +167,7 @@ public class BaseMergedParser implements IDateTimeParser {
                 val.setMod(Constants.UNTIL_MOD);
             }
 
-            pr = new DateTimeParseResult(pr.withValue(val));
+            pr = new DateTimeParseResult(pr.withValue(val)).withTimexStr(pr.timexStr);
         }
 
         if (hasAfter && pr != null && pr.value != null) {
@@ -174,7 +175,8 @@ public class BaseMergedParser implements IDateTimeParser {
                     pr.withStart(pr.start - modStr.length())
                     .withText(modStr + pr.text))
                     .withLength(pr.length + modStr.length())
-                    .withValue(pr.value));
+                    .withValue(pr.value))
+                    .withTimexStr(pr.timexStr);
             DateTimeResolutionResult val = (DateTimeResolutionResult) pr.value;
 
             if (!hasInclusiveModifier) {
@@ -183,7 +185,7 @@ public class BaseMergedParser implements IDateTimeParser {
                 val.setMod(Constants.SINCE_MOD);
             }
 
-            pr = new DateTimeParseResult(pr.withValue(val));
+            pr = new DateTimeParseResult(pr.withValue(val)).withTimexStr(pr.timexStr);
         }
 
         if (hasSince && pr != null && pr.value != null) {
@@ -191,26 +193,28 @@ public class BaseMergedParser implements IDateTimeParser {
                     pr.withStart(pr.start - modStr.length())
                     .withText(modStr + pr.text))
                     .withLength(pr.length + modStr.length())
-                    .withValue(pr.value));
+                    .withValue(pr.value))
+                    .withTimexStr(pr.timexStr);
             DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
             val.setMod( Constants.SINCE_MOD);
-            pr = new DateTimeParseResult(pr.withValue(val));
+            pr = new DateTimeParseResult(pr.withValue(val)).withTimexStr(pr.timexStr);
         }
 
         if (hasYearAfter && pr != null && pr.value != null) {
             pr = new DateTimeParseResult(new ParseResult(
                     pr.withLength(pr.length + modStr.length())
                     .withText(pr.text + modStr))
-                    .withValue(pr.value));
+                    .withValue(pr.value))
+                    .withTimexStr(pr.timexStr);
             DateTimeResolutionResult val = (DateTimeResolutionResult)pr.value;
             val.setMod(Constants.SINCE_MOD);
-            pr = new DateTimeParseResult(pr.withValue(val));
+            pr = new DateTimeParseResult(pr.withValue(val)).withTimexStr(pr.timexStr);
             hasSince = true;
         }
 
         if (config.getOptions().match(DateTimeOptions.SplitDateAndTime) && pr != null && pr.value != null &&
                 ((DateTimeResolutionResult)pr.value).getSubDateTimeEntities() != null) {
-            pr = new DateTimeParseResult(pr.withValue(dateTimeResolutionForSplit(pr)));
+            pr = new DateTimeParseResult(pr.withValue(dateTimeResolutionForSplit(pr))).withTimexStr(pr.timexStr);
         } else {
             boolean hasModifier = hasBefore || hasAfter || hasSince;
             pr = setParseResult(pr, hasModifier);
@@ -219,7 +223,8 @@ public class BaseMergedParser implements IDateTimeParser {
         if (this.config.getOptions().match(DateTimeOptions.EnablePreview)) {
             pr = new DateTimeParseResult(new ParseResult(
                     pr.withLength(pr.length + originText.length() - pr.text.length())
-                    .withText(originText)));
+                    .withText(originText)))
+                    .withTimexStr(pr.timexStr);
         }
 
         return pr;
@@ -254,7 +259,8 @@ public class BaseMergedParser implements IDateTimeParser {
         slot = new DateTimeParseResult(new ParseResult(
                     // Change the type at last for the after or before modes
                     slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, hasMod))))
-                .withValue(dateTimeResolution(slot)));
+                .withValue(dateTimeResolution(slot)))
+                .withTimexStr(slot.timexStr);
 
 
 
@@ -297,7 +303,8 @@ public class BaseMergedParser implements IDateTimeParser {
         } else {
             slot = new DateTimeParseResult( new ParseResult(
                     slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, false))))
-                    .withValue(dateTimeResolution(slot)));
+                    .withValue(dateTimeResolution(slot)))
+                    .withTimexStr(slot.timexStr);
             results.add(slot);
         }
 
