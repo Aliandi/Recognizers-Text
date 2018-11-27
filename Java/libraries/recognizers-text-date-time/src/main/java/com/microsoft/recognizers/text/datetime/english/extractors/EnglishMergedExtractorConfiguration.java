@@ -58,7 +58,7 @@ public class EnglishMergedExtractorConfiguration implements IMergedExtractorConf
             add(RegExpUtility.getSafeRegExp(EnglishDateTime.OneOnOneRegex, Pattern.CASE_INSENSITIVE));
 
             // (the)? (day|week|month|year)
-            add(RegExpUtility.getSafeRegExp(EnglishDateTime.OneOnOneRegex, Pattern.CASE_INSENSITIVE));
+            add(RegExpUtility.getSafeRegExp(EnglishDateTime.SingleAmbiguousTermsRegex, Pattern.CASE_INSENSITIVE));
         }
     };
 

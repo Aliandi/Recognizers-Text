@@ -208,7 +208,7 @@ public class BaseDateTimeExtractor implements IDateTimeExtractor {
 
         // handle cases which use numbers as time points
         // only enabled in CalendarMode
-        if (this.config.getOptions() == DateTimeOptions.CalendarMode) {
+        if (this.config.getOptions().match(DateTimeOptions.CalendarMode)) {
 
             List<ExtractResult> numErs = new ArrayList<>();
             for (Match timeNumMatch : timeNumMatches) {

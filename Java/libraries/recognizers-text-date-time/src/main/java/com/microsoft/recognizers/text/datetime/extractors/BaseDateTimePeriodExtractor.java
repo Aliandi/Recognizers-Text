@@ -432,7 +432,7 @@ public class BaseDateTimePeriodExtractor implements IDateTimeExtractor {
         for (ExtractResult dateEr : dateErs) {
             int dateStrEnd = dateEr.start + dateEr.length;
             String beforeStr = input.substring(0, dateEr.start).trim();
-            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getRelativeTimeUnitRegex(), beforeStr)).findFirst();
+            Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getPrefixDayRegex(), beforeStr)).findFirst();
             if (match.isPresent()) {
                 results.add(new Token(match.get().index, dateStrEnd));
             }
