@@ -872,7 +872,7 @@ public class BaseDateTimePeriodParser implements IDateTimeParser {
                 DateTimeParseResult pr = config.getDateParser().parse(dateResult.get(dateResult.size() - 1), referenceDate);
                 if (pr.value != null) {
                     LocalDateTime startTime = (LocalDateTime) ((DateTimeResolutionResult) pr.value).getFutureValue();
-                    startTime = LocalDateTime.from(startTime.toLocalDate());
+                    startTime = LocalDateTime.of(startTime.getYear(), startTime.getMonthValue(), startTime.getDayOfMonth(), 0, 0, 0);
                     LocalDateTime endTime = startTime;
 
                     if (StringUtility.isNullOrEmpty(match.get().getGroup("EarlyPrefix").value)) {

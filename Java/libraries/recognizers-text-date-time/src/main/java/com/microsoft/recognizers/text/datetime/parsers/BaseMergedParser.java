@@ -258,13 +258,13 @@ public class BaseMergedParser implements IDateTimeParser {
     }
 
     public DateTimeParseResult setParseResult(DateTimeParseResult slot, boolean hasMod) {
-        slot = new DateTimeParseResult(new ParseResult(
-                    // Change the type at last for the after or before modes
-                    slot.withType(String.format("%s.%s",parserName, determineDateTimeType(slot.type, hasMod))))
-                .withValue(dateTimeResolution(slot)))
+        SortedMap<String, Object> slotValue = dateTimeResolution(slot);
+        // Change the type at last for the after or before modes
+        String type = String.format("%s.%s", parserName, determineDateTimeType(slot.type, hasMod));
+
+        slot = new DateTimeParseResult(new ParseResult(slot.withType(type))
+                .withValue(slotValue))
                 .withTimexStr(slot.timexStr);
-
-
 
         return slot;
     }
@@ -537,7 +537,7 @@ public class BaseMergedParser implements IDateTimeParser {
         if (resolutionDic.containsKey(keyName)) {
             Map<String, String> resolution = (Map<String, String>)resolutionDic.get(keyName);
 
-            LocalDateTime monday = LocalDateTime.parse(resolution.get(DateTimeResolutionKey.START));
+            LocalDateTime monday = DateUtil.tryParse(resolution.get(DateTimeResolutionKey.START));
             resolution.put(DateTimeResolutionKey.Timex, TimexUtility.generateWeekTimex(monday));
 
             resolutionDic.put(keyName, resolution);

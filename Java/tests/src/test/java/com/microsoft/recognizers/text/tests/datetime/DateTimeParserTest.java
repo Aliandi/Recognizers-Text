@@ -114,11 +114,10 @@ public class DateTimeParserTest extends AbstractTest {
 			IntStream.range(0, expectedResults.size()).mapToObj(i -> new Pair<>(expectedResults.get(i), actualResults.get(i))).forEach(o -> {
 				Map<String, Object> expectedItem = o.getValue0();
 				Map<String, Object> actualItem = o.getValue1();
-				Assert.assertTrue(String.format("Keys error \n\tExpected:\t%s\n\tActual:\t%s", String.join(",", expectedItem.keySet()), String.join(",", actualItem.keySet())), actualItem.keySet().containsAll(expectedItem.keySet()));
+
 				for (String key : expectedItem.keySet()) {
-					if (actualItem.containsKey(key)) {
-						Assert.assertEquals(getMessage(currentCase, "values." + key), expectedItem.get(key), actualItem.get(key));
-					}
+					Assert.assertTrue(getMessage(currentCase, "values." + key), actualItem.containsKey(key));
+					Assert.assertEquals(getMessage(currentCase, "values." + key), expectedItem.get(key), actualItem.get(key));
 				}
 			});
 		}

@@ -190,7 +190,7 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
 
     private List<ExtractResult> pruneInvalidImplicitDate(List<ExtractResult> ers) {
 
-        return ers.stream().filter(er -> {
+        ers.removeIf(er -> {
 
             if (er.data != null || !er.type.equals(Constants.SYS_DATETIME_DATE)) {
                 return false;
@@ -199,7 +199,8 @@ public class BaseDateTimeAltExtractor implements IDateTimeListExtractor {
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(config.getDayRegex(), er.text)).findFirst();
 
             return match.isPresent() && match.get().index == 0 && match.get().length == er.length;
-        }).collect(Collectors.toList());
+        });
+        return ers;
     }
 
     // Resolve cases like "this week or next".

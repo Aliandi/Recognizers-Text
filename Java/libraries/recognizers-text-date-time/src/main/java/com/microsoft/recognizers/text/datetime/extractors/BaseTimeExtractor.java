@@ -104,7 +104,7 @@ public class BaseTimeExtractor implements IDateTimeExtractor {
             // handle "before 3", "after three"
             Pattern beforeAfterRegex = this.config.getTimeBeforeAfterRegex();
             Match[] matches = RegExpUtility.getMatches(beforeAfterRegex, text);
-            if (matches.length > 1) {
+            if (matches.length > 0) {
                 for (Match match : matches) {
                     ret.add(new Token(match.index, match.index + match.length));
                 }
