@@ -42,11 +42,11 @@ namespace Microsoft.Recognizers.Definitions<#= this.Language != null ? "." + thi
 #>		public const char <#= node.Key #> = '<#= node.Value #>';<#
         }
 		if (nodeType == typeof(string)) {
-#>		public const string <#= node.Key #> = "<#= node.Value #>";<#
+#>		public const string <#= node.Key #> = @"<#= SanitizeForVerbatim(node.Value) #>";<#
         }
 		if (node.Value is IList<object>) {
 			var values = node.Value as IList<object>;
-#>		public static readonly string[] <#= node.Key #> = { <#= string.Join(", ", values.Select(x => string.Format("\"{0}\"", x))) #> };<#
+#>		public static readonly string[] <#= node.Key #> = { <#= string.Join(", ", values.Select(x => string.Format("\"{0}\"", SanitizeForVerbatim(x)))) #> };<#
         }
 		if (nodeType == typeof(SimpleRegex))
 		{
@@ -110,7 +110,7 @@ namespace Microsoft.Recognizers.Definitions<#= this.Language != null ? "." + thi
 				case "long": 
 				case "double": 
 				case "float": return string.Format("{0}", value);
-				default: return string.Format("\"{0}\"", value);
+				default: return string.Format("@\"{0}\"", SanitizeForVerbatim(value));
 			}
 		}
 	}
@@ -122,6 +122,16 @@ namespace Microsoft.Recognizers.Definitions<#= this.Language != null ? "." + thi
 		}
 
 		return valueType;
+	}
+
+	private string SanitizeForVerbatim(object value)
+	{
+		return SanitizeForVerbatim(value.ToString());
+	}
+
+	private string SanitizeForVerbatim(string value)
+	{
+		return value.Replace(@"\""", "\"\"");
 	}
 
 	private string GetSafeParameterValue(string value) {
