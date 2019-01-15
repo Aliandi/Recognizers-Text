@@ -123,8 +123,8 @@ public class BaseSetExtractor implements IDateTimeExtractor {
         Match[] matches = RegExpUtility.getMatches(setEachRegex, input);
         for (Match match : matches) {
             if (match != null) {
-                String trimedText = sb.delete(match.index, match.index + match.length).toString();
-                List<ExtractResult> ers = extractor.extract(trimedText, reference);
+                String trimmedText = sb.delete(match.index, match.index + match.length).toString();
+                List<ExtractResult> ers = extractor.extract(trimmedText, reference);
                 for (ExtractResult er : ers) {
                     if (er.getStart() <= match.index && (er.getStart() + er.getLength()) > match.index) {
                         ret.add(new Token(er.getStart(), er.getStart() + er.getLength() + match.length));
