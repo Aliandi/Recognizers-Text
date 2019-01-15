@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public interface ICJKNumberParserConfiguration extends INumberParserConfiguration {
-    //region language dictionaries
+    // language dictionaries
 
     Map<Character, Double> getZeroToNineMap();
 
@@ -17,16 +17,10 @@ public interface ICJKNumberParserConfiguration extends INumberParserConfiguratio
 
     Map<Character, Character> getTratoSimMap();
 
-    //endregion
-
-    //region language lists
-
+    // language lists
     List<Character> getRoundDirectList();
 
-    //endregion
-
-    //region language settings
-
+    // language settings
     Pattern getFracSplitRegex();
 
     Pattern getDigitNumRegex();
@@ -44,6 +38,4 @@ public interface ICJKNumberParserConfiguration extends INumberParserConfiguratio
     Pattern getDozenRegex();
 
     Pattern getRoundNumberIntegerRegex();
-
-    //endregion
 }

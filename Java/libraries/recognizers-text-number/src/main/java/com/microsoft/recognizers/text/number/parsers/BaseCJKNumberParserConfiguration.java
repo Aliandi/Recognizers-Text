@@ -33,7 +33,7 @@ public abstract class BaseCJKNumberParserConfiguration implements ICJKNumberPars
     private final Pattern negativeNumberSignRegex;
     private final Pattern fractionPrepositionRegex;
 
-    //region ICJKNumberParserConfiguration
+    // ICJKNumberParserConfiguration
     private final Map<Character, Double> zeroToNineMap;
     private final Map<Character, Long> roundNumberMapChar;
     private final Map<Character, Character> fullToHalfMap;
@@ -95,7 +95,6 @@ public abstract class BaseCJKNumberParserConfiguration implements ICJKNumberPars
         this.dozenRegex = dozenRegex;
         this.roundNumberIntegerRegex = roundNumberIntegerRegex;
     }
-    //endregion
 
     @Override
     public Map<Character, Double> getZeroToNineMap() {

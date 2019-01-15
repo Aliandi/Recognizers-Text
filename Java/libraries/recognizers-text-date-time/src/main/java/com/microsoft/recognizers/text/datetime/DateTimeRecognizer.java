@@ -45,7 +45,7 @@ public class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
         return getModel(DateTimeModel.class, culture, fallbackToDefaultCulture);
     }
 
-    //region Helper methods for less verbosity
+    // Helper methods for less verbosity
     public static List<ModelResult> recognizeDateTime(String query, String culture) {
         return recognizeByModel(recognizer -> recognizer.getDateTimeModel(culture, true), query, DateTimeOptions.None, LocalDateTime.now());
     }
@@ -61,7 +61,6 @@ public class DateTimeRecognizer extends Recognizer<DateTimeOptions> {
     public static List<ModelResult> recognizeDateTime(String query, String culture, DateTimeOptions options, boolean fallbackToDefaultCulture, LocalDateTime reference) {
         return recognizeByModel(recognizer -> recognizer.getDateTimeModel(culture, fallbackToDefaultCulture), query, options, reference);
     }
-    //endregion
 
     private static List<ModelResult> recognizeByModel(Function<DateTimeRecognizer, DateTimeModel> getModelFun, String query, DateTimeOptions options, LocalDateTime reference) {
         DateTimeRecognizer recognizer = new DateTimeRecognizer(options);

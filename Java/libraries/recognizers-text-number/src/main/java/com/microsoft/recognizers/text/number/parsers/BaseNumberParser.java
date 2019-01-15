@@ -294,13 +294,12 @@ public class BaseNumberParser implements IParser {
         ParseResult result = new ParseResult(extractResult.getStart(), extractResult.getLength(), extractResult.getText(), extractResult.getType(), null, null, null);
         String handle = extractResult.getText().toLowerCase();
 
-        //region Special case for "dozen"
+        // Special case for "dozen"
         handle = config.getHalfADozenRegex().matcher(handle).replaceAll(config.getHalfADozenText());
-        //endregion
 
         List<String> numGroup = QueryProcessor.split(handle, config.getWrittenDecimalSeparatorTexts());
 
-        //region IntegerPart
+        // IntegerPart
         String intPart = numGroup.get(0);
 
         //Store all match str.
@@ -313,9 +312,8 @@ public class BaseNumberParser implements IParser {
 
         // Get the value recursively
         double intPartRet = getIntValue(matchStrs);
-        //endregion
 
-        //region DecimalPart
+        // DecimalPart
         double pointPartRet = 0;
         if (numGroup.size() == 2) {
             String pointPart = numGroup.get(1);
@@ -327,8 +325,7 @@ public class BaseNumberParser implements IParser {
             }
             pointPartRet += getPointValue(matchStrs);
         }
-        //endregion
-
+        
         result.setValue(intPartRet + pointPartRet);
 
         return result;

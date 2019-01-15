@@ -45,7 +45,7 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
         super(culture, numberOptions, lazyInitialization);
     }
 
-    //region Helper methods for less verbosity
+    // Helper methods for less verbosity
     public NumberModel getNumberModel() {
         return getNumberModel(null, true);
     }
@@ -125,7 +125,6 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
     public static List<ModelResult> recognizeNumberRange(String query, String culture, NumberOptions options, boolean fallbackToDefaultCulture) {
         return recognizeByModel((NumberRecognizer recognizer) -> recognizer.getNumberRangeModel(culture, fallbackToDefaultCulture), query, options);
     }
-    //endregion
 
     private static List<ModelResult> recognizeByModel(Function<NumberRecognizer, IModel> getModelFun, String query, NumberOptions options) {
         NumberRecognizer recognizer = new NumberRecognizer(options);
@@ -135,7 +134,7 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
 
     @Override
     protected void initializeConfiguration() {
-        //region English
+        // English
         registerModel(NumberModel.class, Culture.English, (options) -> new NumberModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new EnglishNumberParserConfiguration(options)),
                 com.microsoft.recognizers.text.number.english.extractors.NumberExtractor.getInstance(NumberMode.PureNumber, options)));
@@ -149,9 +148,7 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
                 new BaseNumberRangeParser(new EnglishNumberRangeParserConfiguration()),
                 new com.microsoft.recognizers.text.number.english.extractors.NumberRangeExtractor()));
 
-        //endregion
-
-        //region Spanish
+        // Spanish
         registerModel(NumberModel.class, Culture.Spanish, (options) -> new NumberModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new SpanishNumberParserConfiguration()),
                 new com.microsoft.recognizers.text.number.spanish.extractors.NumberExtractor(NumberMode.PureNumber)));
@@ -161,9 +158,8 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
         registerModel(PercentModel.class, Culture.Spanish, (options) -> new PercentModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Percentage, new SpanishNumberParserConfiguration()),
                 new com.microsoft.recognizers.text.number.spanish.extractors.PercentageExtractor()));
-        //endregion
 
-        //region Portuguese
+        // Portuguese
         registerModel(NumberModel.class, Culture.Portuguese, (options) -> new NumberModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new PortugueseNumberParserConfiguration()),
                 new com.microsoft.recognizers.text.number.portuguese.extractors.NumberExtractor(NumberMode.PureNumber)));
@@ -173,9 +169,8 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
         registerModel(PercentModel.class, Culture.Portuguese, (options) -> new PercentModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Percentage, new PortugueseNumberParserConfiguration()),
                 new com.microsoft.recognizers.text.number.portuguese.extractors.PercentageExtractor()));
-        //endregion
 
-        //region French
+        // French
         registerModel(NumberModel.class, Culture.French, (options) -> new NumberModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new FrenchNumberParserConfiguration()),
                 com.microsoft.recognizers.text.number.french.extractors.NumberExtractor.getInstance(NumberMode.PureNumber)));
@@ -185,9 +180,8 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
         registerModel(PercentModel.class, Culture.French, (options) -> new PercentModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Percentage, new FrenchNumberParserConfiguration()),
                 new com.microsoft.recognizers.text.number.french.extractors.PercentageExtractor()));
-        //endregion
 
-        //region German
+        // German
         registerModel(NumberModel.class, Culture.German, (options) -> new NumberModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new GermanNumberParserConfiguration()),
                 com.microsoft.recognizers.text.number.german.extractors.NumberExtractor.getInstance(NumberMode.PureNumber)));
@@ -197,9 +191,8 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
         registerModel(PercentModel.class, Culture.German, (options) -> new PercentModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Percentage, new GermanNumberParserConfiguration()),
                 new com.microsoft.recognizers.text.number.german.extractors.PercentageExtractor()));
-        //endregion
         
-        //region Chinese
+        // Chinese
         registerModel(NumberModel.class, Culture.Chinese, (options) -> new NumberModel(
                 AgnosticNumberParserFactory.getParser(AgnosticNumberParserType.Number, new ChineseNumberParserConfiguration()),
                 new com.microsoft.recognizers.text.number.chinese.extractors.NumberExtractor()));
@@ -212,6 +205,5 @@ public class NumberRecognizer extends Recognizer<NumberOptions> {
         registerModel(NumberRangeModel.class, Culture.Chinese, (options) -> new NumberRangeModel(
                 new BaseNumberRangeParser(new ChineseNumberRangeParserConfiguration()),
                 new com.microsoft.recognizers.text.number.chinese.extractors.NumberRangeExtractor()));
-        //endregion
     }
 }

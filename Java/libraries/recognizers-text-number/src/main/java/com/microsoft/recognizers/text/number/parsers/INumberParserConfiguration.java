@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public interface INumberParserConfiguration {
 
-    //region language dictionaries
+    // language dictionaries
 
     Map<String, Long> getCardinalNumberMap();
 
@@ -18,10 +18,7 @@ public interface INumberParserConfiguration {
 
     Map<String, Long> getRoundNumberMap();
 
-    //endregion
-
-    //region language settings
-
+    // language settings
     NumberOptions getOptions();
 
     CultureInfo getCultureInfo();
@@ -53,8 +50,6 @@ public interface INumberParserConfiguration {
     List<String> getWrittenFractionSeparatorTexts();
 
     Pattern getNegativeNumberSignRegex();
-
-    //endregion
 
     /**
      * Used when requiring to normalize a token to a valid expression supported by the ImmutableDictionaries (language dictionaries)

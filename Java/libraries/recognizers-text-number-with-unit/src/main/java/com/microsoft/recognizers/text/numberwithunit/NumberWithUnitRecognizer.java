@@ -71,7 +71,7 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
         return getModel(DimensionModel.class, culture, fallbackToDefaultCulture);
     }
 
-    //region Helper methods for less verbosity
+    // Helper methods for less verbosity
     public static List<ModelResult> recognizeCurrency(String query, String culture) {
         return recognizeByModel(recognizer -> recognizer.getCurrencyModel(culture, true), query, NumberWithUnitOptions.None);
     }
@@ -119,7 +119,6 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
     public static List<ModelResult> recognizeDimension(String query, String culture, NumberWithUnitOptions options, boolean fallbackToDefaultCulture) {
         return recognizeByModel(recognizer -> recognizer.getDimensionModel(culture, fallbackToDefaultCulture), query, options);
     }
-    //endregion
 
     private static List<ModelResult> recognizeByModel(Function<NumberWithUnitRecognizer, IModel> getModelFun, String query, NumberWithUnitOptions options) {
         NumberWithUnitRecognizer recognizer = new NumberWithUnitRecognizer(options);
@@ -130,7 +129,7 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
     @Override
     protected void initializeConfiguration() {
 
-        //region English
+        // English
         registerModel(CurrencyModel.class, Culture.English, (options) ->
                 new CurrencyModel(ImmutableMap.of(
                         new BaseMergedUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.english.extractors.CurrencyExtractorConfiguration()),
@@ -147,9 +146,8 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
                 new AgeModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.english.extractors.AgeExtractorConfiguration()),
                         new NumberWithUnitParser(new com.microsoft.recognizers.text.numberwithunit.english.parsers.AgeParserConfiguration()))));
-        //endregion
 
-        //region Spanish
+        // Spanish
         registerModel(CurrencyModel.class, Culture.Spanish, (options) ->
                 new CurrencyModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.spanish.extractors.CurrencyExtractorConfiguration()),
@@ -166,9 +164,8 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
                 new AgeModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.spanish.extractors.AgeExtractorConfiguration()),
                         new NumberWithUnitParser(new com.microsoft.recognizers.text.numberwithunit.spanish.parsers.AgeParserConfiguration()))));
-        //endregion
 
-        //region Portuguese
+        // Portuguese
         registerModel(CurrencyModel.class, Culture.Portuguese, (options) ->
                 new CurrencyModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.portuguese.extractors.CurrencyExtractorConfiguration()),
@@ -185,9 +182,8 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
                 new AgeModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.portuguese.extractors.AgeExtractorConfiguration()),
                         new NumberWithUnitParser(new com.microsoft.recognizers.text.numberwithunit.portuguese.parsers.AgeParserConfiguration()))));
-        //endregion
 
-        //region French
+        // French
         registerModel(CurrencyModel.class, Culture.French, (options) ->
                 new CurrencyModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.french.extractors.CurrencyExtractorConfiguration()),
@@ -204,9 +200,8 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
                 new AgeModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.french.extractors.AgeExtractorConfiguration()),
                         new NumberWithUnitParser(new com.microsoft.recognizers.text.numberwithunit.french.parsers.AgeParserConfiguration()))));
-        //endregion
 
-        //region German
+        // German
         registerModel(CurrencyModel.class, Culture.German, (options) ->
                 new CurrencyModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.german.extractors.CurrencyExtractorConfiguration()),
@@ -223,10 +218,8 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
                 new AgeModel(ImmutableMap.of(
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.german.extractors.AgeExtractorConfiguration()),
                         new NumberWithUnitParser(new com.microsoft.recognizers.text.numberwithunit.german.parsers.AgeParserConfiguration()))));
-        //endregion
 
-
-        //region Chinese
+        // Chinese
         registerModel(CurrencyModel.class, Culture.Chinese, (options) ->
                 new CurrencyModel(ImmutableMap.of(
                         new BaseMergedUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.chinese.extractors.CurrencyExtractorConfiguration()),
@@ -251,6 +244,5 @@ public class NumberWithUnitRecognizer extends Recognizer<NumberWithUnitOptions> 
                         new NumberWithUnitParser(new com.microsoft.recognizers.text.numberwithunit.chinese.parsers.AgeParserConfiguration()),
                         new NumberWithUnitExtractor(new com.microsoft.recognizers.text.numberwithunit.english.extractors.AgeExtractorConfiguration()),
                         new NumberWithUnitParser(new com.microsoft.recognizers.text.numberwithunit.english.parsers.AgeParserConfiguration()))));
-        //endregion
     }
 }
