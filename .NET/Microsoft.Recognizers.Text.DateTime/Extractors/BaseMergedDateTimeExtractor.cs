@@ -181,7 +181,7 @@ namespace Microsoft.Recognizers.Text.DateTime
                 {
                     var tempDst = dst.Where((_, i) => !overlapIndexes.Contains(i)).ToList();
 
-                    // Insert at the first overlap occurence to keep the order
+                    // Insert at the first overlap occurrence to keep the order
                     tempDst.Insert(firstIndex, result);
                     dst.Clear();
                     dst.AddRange(tempDst);

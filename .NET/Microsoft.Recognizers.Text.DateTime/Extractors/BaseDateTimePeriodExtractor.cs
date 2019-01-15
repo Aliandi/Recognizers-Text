@@ -300,7 +300,7 @@ namespace Microsoft.Recognizers.Text.DateTime
                 idx++;
             }
 
-            // Regarding the pharse as-- {Date} {TimePeriod}, like "2015-9-23 1pm to 4"
+            // Regarding the phrase as-- {Date} {TimePeriod}, like "2015-9-23 1pm to 4"
             // Or {TimePeriod} on {Date}, like "1:30 to 4 on 2015-9-23"
             var timePeriodErs = config.TimePeriodExtractor.Extract(text, reference);
             dateErs.AddRange(timePeriodErs);

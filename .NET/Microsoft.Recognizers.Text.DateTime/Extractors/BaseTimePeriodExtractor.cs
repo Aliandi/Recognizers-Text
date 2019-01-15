@@ -63,7 +63,7 @@ namespace Microsoft.Recognizers.Text.DateTime
 
         // Cases like "from 3 to 5am" or "between 3:30 and 5" are extracted here
         // Note that cases like "from 3 to 5" will not be extracted here because no "am/pm" or "hh:mm" to infer it's a time period
-        // Also cases like "from 3:30 to 4 people" shuold not be extracted as a time period
+        // Also cases like "from 3:30 to 4 people" should not be extracted as a time period
         private List<Token> MatchSimpleCases(string text)
         {
             var ret = new List<Token>();
