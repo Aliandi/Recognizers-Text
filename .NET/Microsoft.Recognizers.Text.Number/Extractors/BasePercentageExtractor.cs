@@ -28,8 +28,8 @@ namespace Microsoft.Recognizers.Text.Number
         /// <summary>
         /// extractor the percentage entities from the sentence.
         /// </summary>
-        /// <param name="source">sentnce.</param>
-        /// <returns>List of percentaje entities from the sentence source.</returns>
+        /// <param name="source">sentence.</param>
+        /// <returns>List of percentage entities from the sentence source.</returns>
         public List<ExtractResult> Extract(string source)
         {
             var originSource = source;
@@ -130,8 +130,12 @@ namespace Microsoft.Recognizers.Text.Number
         /// replace the @sys.num to the real patterns, directly modifies the ExtractResult.
         /// </summary>
         /// <param name="results">extract results after number extractor.</param>
+        /// <param name="originSource">the sentense after replacing the @sys.num, Example: @sys.num %.</param>
         private void PostProcessing(
-            List<ExtractResult> results, string originSource, Dictionary<int, int> positionMap, IList<ExtractResult> numExtResults)
+            List<ExtractResult> results,
+            string originSource,
+            Dictionary<int, int> positionMap,
+            IList<ExtractResult> numExtResults)
         {
             string replaceNumText = "@" + NumExtType;
             string replaceFracNumText = "@" + FracNumExtType;
@@ -207,7 +211,9 @@ namespace Microsoft.Recognizers.Text.Number
         /// <param name="numExtResults">number extractor result.</param>
         /// <returns>return according type "builtin.num" or "builtin.num.percentage".</returns>
         private string PreprocessStrWithNumberExtracted(
-            string str, out Dictionary<int, int> positionMap, out IList<ExtractResult> numExtResults)
+            string str,
+            out Dictionary<int, int> positionMap,
+            out IList<ExtractResult> numExtResults)
         {
             positionMap = new Dictionary<int, int>();
 
