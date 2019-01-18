@@ -74,17 +74,17 @@ export class SpanishHolidayParserConfiguration extends BaseHolidayParserConfigur
     private static EasterDay(year: number): Date { return DateUtils.minValue(); }
 
     getSwiftYear(text: string): number {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let swift = -10;
 
-        if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimmedText).matched) {
             swift = 1;
         }
 
-        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimmedText).matched) {
             swift = -1;
         }
-        else if (RegExpUtility.getFirstMatchIndex(this.thisPrefixRegex, trimedText).matched) {
+        else if (RegExpUtility.getFirstMatchIndex(this.thisPrefixRegex, trimmedText).matched) {
             swift = 0;
         }
 

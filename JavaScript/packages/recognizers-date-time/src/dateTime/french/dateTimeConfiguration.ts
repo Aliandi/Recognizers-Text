@@ -124,18 +124,18 @@ export class FrenchDateTimeParserConfiguration implements IDateTimeParserConfigu
     }
 
     getMatchedNowTimex(text: string): { matched: boolean; timex: string; } {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let timex = "";
-        if (trimedText.endsWith("maintenant")) {
+        if (trimmedText.endsWith("maintenant")) {
             timex = "PRESENT_REF";
         }
-        else if (trimedText === "récemment" || 
-            trimedText === "précédemment" ||
-            trimedText === "auparavant") {
+        else if (trimmedText === "récemment" || 
+            trimmedText === "précédemment" ||
+            trimmedText === "auparavant") {
             timex = "PAST_REF";
         }
-        else if (trimedText === "dès que possible" || 
-            trimedText === "dqp") {
+        else if (trimmedText === "dès que possible" || 
+            trimmedText === "dqp") {
             timex = "FUTURE_REF";
         }
         else {
@@ -152,19 +152,19 @@ export class FrenchDateTimeParserConfiguration implements IDateTimeParserConfigu
     }
 
     getSwiftDay(text: string): number {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let swift = 0;
 
-        if (trimedText.startsWith("prochain") || 
-            trimedText.endsWith("prochain") ||
-            trimedText.startsWith("prochaine") || 
-            trimedText.endsWith("prochaine")) {
+        if (trimmedText.startsWith("prochain") || 
+            trimmedText.endsWith("prochain") ||
+            trimmedText.startsWith("prochaine") || 
+            trimmedText.endsWith("prochaine")) {
             swift = 1;
         }
-        else if (trimedText.startsWith("dernier") || 
-            trimedText.startsWith("dernière") ||
-            trimedText.endsWith("dernier") || 
-            trimedText.endsWith("dernière")) {
+        else if (trimmedText.startsWith("dernier") || 
+            trimmedText.startsWith("dernière") ||
+            trimmedText.endsWith("dernier") || 
+            trimmedText.endsWith("dernière")) {
             swift = -1;
         }
 
@@ -173,14 +173,14 @@ export class FrenchDateTimeParserConfiguration implements IDateTimeParserConfigu
     }
 
     getHour(text: string, hour: number): number {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let result = hour;
 
         // TODO: Replace with a regex
-        if (trimedText.endsWith("matin") && hour >= 12) {
+        if (trimmedText.endsWith("matin") && hour >= 12) {
             result -= 12;
         }
-        else if (!trimedText.endsWith("matin") && hour < 12) {
+        else if (!trimmedText.endsWith("matin") && hour < 12) {
             result += 12;
         }
 

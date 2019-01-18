@@ -103,23 +103,23 @@ export class FrenchSetParserConfiguration implements ISetParserConfiguration {
     }
 
     getMatchedDailyTimex(text: string): { matched: boolean; timex: string; } {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let timex = "";
 
-        if (trimedText === "quotidien" || trimedText === "quotidienne" || 
-            trimedText === "jours" || trimedText === "journellement") {
+        if (trimmedText === "quotidien" || trimmedText === "quotidienne" || 
+            trimmedText === "jours" || trimmedText === "journellement") {
             timex = "P1D";
         }
-        else if (trimedText === "hebdomadaire") {
+        else if (trimmedText === "hebdomadaire") {
             timex = "P1W";
         }
-        else if (trimedText === "bihebdomadaire") {
+        else if (trimmedText === "bihebdomadaire") {
             timex = "P2W";
         }
-        else if (trimedText === "mensuel" || trimedText === "mensuelle") {
+        else if (trimmedText === "mensuel" || trimmedText === "mensuelle") {
             timex = "P1M";
         }
-        else if (trimedText === "annuel" || trimedText === "annuellement") {
+        else if (trimmedText === "annuel" || trimmedText === "annuellement") {
             timex = "P1Y";
         }
         else {
@@ -137,19 +137,19 @@ export class FrenchSetParserConfiguration implements ISetParserConfiguration {
     }
 
     getMatchedUnitTimex(text: string): { matched: boolean; timex: string; } {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let timex = "";
 
-        if (trimedText === "jour" || trimedText === "journee") {
+        if (trimmedText === "jour" || trimmedText === "journee") {
             timex = "P1D";
         }
-        else if (trimedText === "semaine") {
+        else if (trimmedText === "semaine") {
             timex = "P1W";
         }
-        else if (trimedText === "mois") {
+        else if (trimmedText === "mois") {
             timex = "P1M";
         }
-        else if (trimedText === "an" || trimedText === "annee") {
+        else if (trimmedText === "an" || trimmedText === "annee") {
             timex = "P1Y";
         }
         else {

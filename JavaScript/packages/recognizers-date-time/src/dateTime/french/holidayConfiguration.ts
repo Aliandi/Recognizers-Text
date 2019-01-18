@@ -116,16 +116,16 @@ export class FrenchHolidayParserConfiguration extends BaseHolidayParserConfigura
     protected static LabourDay(year: number): Date { return new Date(year, 5, 1);}
 
     getSwiftYear(text: string): number {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let swift = -10;
 
-        if (trimedText.endsWith("prochain")) { // next - 'l'annee prochain')
+        if (trimmedText.endsWith("prochain")) { // next - 'l'annee prochain')
             swift = 1;
         }
-        else if (trimedText.endsWith("dernier")) { // last - 'l'annee dernier'
+        else if (trimmedText.endsWith("dernier")) { // last - 'l'annee dernier'
             swift = -1;
         }
-        else if (trimedText.startsWith("cette")) { // this - 'cette annees'
+        else if (trimmedText.startsWith("cette")) { // this - 'cette annees'
             swift = 0;
         }
 

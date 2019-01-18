@@ -66,19 +66,19 @@ export class SpanishTimeParserConfiguration implements ITimeParserConfiguration 
 
     adjustByPrefix(prefix: string, adjust: { hour: number; min: number; hasMin: boolean; }) {
         let deltaMin = 0;
-        let trimedPrefix = prefix.trim().toLowerCase();
+        let trimmedPrefix = prefix.trim().toLowerCase();
 
-        if (trimedPrefix.startsWith("cuarto") || trimedPrefix.startsWith("y cuarto")) {
+        if (trimmedPrefix.startsWith("cuarto") || trimmedPrefix.startsWith("y cuarto")) {
             deltaMin = 15;
         }
-        else if (trimedPrefix.startsWith("menos cuarto")) {
+        else if (trimmedPrefix.startsWith("menos cuarto")) {
             deltaMin = -15;
         }
-        else if (trimedPrefix.startsWith("media") || trimedPrefix.startsWith("y media")) {
+        else if (trimmedPrefix.startsWith("media") || trimmedPrefix.startsWith("y media")) {
             deltaMin = 30;
         }
         else {
-            let matches = RegExpUtility.getMatches(this.lessThanOneHour, trimedPrefix);
+            let matches = RegExpUtility.getMatches(this.lessThanOneHour, trimmedPrefix);
             if (matches.length) {
                 let match = matches[0];
                 let minStr = match.groups("deltamin").value;
@@ -94,13 +94,13 @@ export class SpanishTimeParserConfiguration implements ITimeParserConfiguration 
             }
         }
 
-        if (trimedPrefix.endsWith("pasadas") || trimedPrefix.endsWith("pasados") ||
-            trimedPrefix.endsWith("pasadas las") || trimedPrefix.endsWith("pasados las") ||
-            trimedPrefix.endsWith("pasadas de las") || trimedPrefix.endsWith("pasados de las")) {
+        if (trimmedPrefix.endsWith("pasadas") || trimmedPrefix.endsWith("pasados") ||
+            trimmedPrefix.endsWith("pasadas las") || trimmedPrefix.endsWith("pasados las") ||
+            trimmedPrefix.endsWith("pasadas de las") || trimmedPrefix.endsWith("pasados de las")) {
             // deltaMin it's positive
         }
-        else if (trimedPrefix.endsWith("para la") || trimedPrefix.endsWith("para las") ||
-            trimedPrefix.endsWith("antes de la") || trimedPrefix.endsWith("antes de las")) {
+        else if (trimmedPrefix.endsWith("para la") || trimmedPrefix.endsWith("para las") ||
+            trimmedPrefix.endsWith("antes de la") || trimmedPrefix.endsWith("antes de las")) {
             deltaMin = -deltaMin;
         }
 
@@ -114,14 +114,14 @@ export class SpanishTimeParserConfiguration implements ITimeParserConfiguration 
     }
 
     adjustBySuffix(suffix: string, adjust: { hour: number; min: number; hasMin: boolean; hasAm: boolean; hasPm: boolean; }) {
-        let trimedSuffix = suffix.trim().toLowerCase();
-        this.adjustByPrefix(trimedSuffix, adjust);
+        let trimmedSuffix = suffix.trim().toLowerCase();
+        this.adjustByPrefix(trimmedSuffix, adjust);
 
         let deltaHour = 0;
-        let matches = RegExpUtility.getMatches(this.timeSuffix, trimedSuffix);
+        let matches = RegExpUtility.getMatches(this.timeSuffix, trimmedSuffix);
         if (matches.length) {
             let match = matches[0];
-            if (match.index === 0 && match.length === trimedSuffix.length) {
+            if (match.index === 0 && match.length === trimmedSuffix.length) {
                 let oclockStr = match.groups("oclock").value;
                 if (!oclockStr) {
                     let amStr = match.groups("am").value;

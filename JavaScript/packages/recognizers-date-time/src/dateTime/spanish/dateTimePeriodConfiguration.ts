@@ -158,33 +158,33 @@ export class SpanishDateTimePeriodParserConfiguration implements IDateTimePeriod
     }
 
     getMatchedTimeRange(source: string): { timeStr: string; beginHour: number; endHour: number; endMin: number; success: boolean; } {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let timeStr = "";
         let beginHour = 0;
         let endHour = 0;
         let endMin = 0;
 
-        if (trimedText.endsWith("madrugada")) {
+        if (trimmedText.endsWith("madrugada")) {
             timeStr = "TDA";
             beginHour = 4;
             endHour = 8;
         }
-        else if (trimedText.endsWith("mañana")) {
+        else if (trimmedText.endsWith("mañana")) {
             timeStr = "TMO";
             beginHour = 8;
             endHour = 12;
         }
-        else if (trimedText.includes("pasado mediodia") || trimedText.includes("pasado el mediodia")) {
+        else if (trimmedText.includes("pasado mediodia") || trimmedText.includes("pasado el mediodia")) {
             timeStr = "TAF";
             beginHour = 12;
             endHour = 16;
         }
-        else if (trimedText.endsWith("tarde")) {
+        else if (trimmedText.endsWith("tarde")) {
             timeStr = "TEV";
             beginHour = 16;
             endHour = 20;
         }
-        else if (trimedText.endsWith("noche")) {
+        else if (trimmedText.endsWith("noche")) {
             timeStr = "TNI";
             beginHour = 20;
             endHour = 23;
@@ -211,15 +211,15 @@ export class SpanishDateTimePeriodParserConfiguration implements IDateTimePeriod
     }
 
     getSwiftPrefix(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = 0;
 
         // TODO: Replace with a regex
-        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimedText).matched ||
-            trimedText === "anoche") {
+        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimmedText).matched ||
+            trimmedText === "anoche") {
             swift = -1;
         }
-        else if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimedText).matched) {
+        else if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimmedText).matched) {
             swift = 1;
         }
 

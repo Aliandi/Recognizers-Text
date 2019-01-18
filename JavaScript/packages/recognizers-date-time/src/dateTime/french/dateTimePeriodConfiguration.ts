@@ -169,28 +169,28 @@ export class FrenchDateTimePeriodParserConfiguration implements IDateTimePeriodP
     }
 
     getMatchedTimeRange(source: string): { timeStr: string; beginHour: number; endHour: number; endMin: number; success: boolean; } {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let timeStr = "";
         let beginHour = 0;
         let endHour = 0;
         let endMin = 0;
 
-        if (RegExpUtility.getFirstMatchIndex(this.morningStartEndRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.morningStartEndRegex, trimmedText).matched) {
             timeStr = "TMO";
             beginHour = 8;
             endHour = 12;
         }
-        else if (RegExpUtility.getFirstMatchIndex(this.afternoonStartEndRegex, trimedText).matched) {
+        else if (RegExpUtility.getFirstMatchIndex(this.afternoonStartEndRegex, trimmedText).matched) {
             timeStr = "TAF";
             beginHour = 12;
             endHour = 16;
         }
-        else if (RegExpUtility.getFirstMatchIndex(this.eveningStartEndRegex, trimedText).matched) {
+        else if (RegExpUtility.getFirstMatchIndex(this.eveningStartEndRegex, trimmedText).matched) {
             timeStr = "TEV";
             beginHour = 16;
             endHour = 20;
         }
-        else if (RegExpUtility.getFirstMatchIndex(this.nightStartEndRegex, trimedText).matched) {
+        else if (RegExpUtility.getFirstMatchIndex(this.nightStartEndRegex, trimmedText).matched) {
             timeStr = "TNI";
             beginHour = 20;
             endHour = 23;
@@ -217,20 +217,20 @@ export class FrenchDateTimePeriodParserConfiguration implements IDateTimePeriodP
     }
 
     getSwiftPrefix(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = 0;
 
         // TODO: Replace with a regex
-        if (trimedText.startsWith("prochain") || 
-            trimedText.endsWith("prochain") ||
-            trimedText.startsWith("prochaine") || 
-            trimedText.endsWith("prochaine")) {
+        if (trimmedText.startsWith("prochain") || 
+            trimmedText.endsWith("prochain") ||
+            trimmedText.startsWith("prochaine") || 
+            trimmedText.endsWith("prochaine")) {
             swift = 1;
         }
-        else if (trimedText.startsWith("derniere") || 
-            trimedText.startsWith("dernier")||
-            trimedText.endsWith("derniere") || 
-            trimedText.endsWith("dernier")) {
+        else if (trimmedText.startsWith("derniere") || 
+            trimmedText.startsWith("dernier")||
+            trimmedText.endsWith("derniere") || 
+            trimmedText.endsWith("dernier")) {
             swift = -1;
         }
 

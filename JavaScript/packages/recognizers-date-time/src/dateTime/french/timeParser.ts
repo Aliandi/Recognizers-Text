@@ -20,10 +20,10 @@ export class FrenchTimeParser extends BaseTimeParser {
 
     parseIsh(text: string, referenceTime: Date): DateTimeResolutionResult {
         let ret = new DateTimeResolutionResult();
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
 
         let matches = RegExpUtility.getMatches(RegExpUtility.getSafeRegExp(FrenchDateTime.IshRegex), text);
-        if (matches.length && matches[0].index === 0 && matches[0].length === trimedText.length) {
+        if (matches.length && matches[0].index === 0 && matches[0].length === trimmedText.length) {
             let hourStr = matches[0].groups("hour").value;
             let hour = 12;
             if (hourStr) {

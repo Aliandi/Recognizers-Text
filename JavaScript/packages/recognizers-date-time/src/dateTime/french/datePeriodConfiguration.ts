@@ -183,17 +183,17 @@ export class FrenchDatePeriodParserConfiguration implements IDatePeriodParserCon
     }
 
     getSwiftDayOrMonth(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = 0;
 
-        if (trimedText.endsWith("prochain") || trimedText.endsWith("prochaine")) {
+        if (trimmedText.endsWith("prochain") || trimmedText.endsWith("prochaine")) {
             swift = 1;
         }
 
-        if (trimedText.endsWith("dernière") || 
-            trimedText.endsWith("dernières") ||
-            trimedText.endsWith("derniere") || 
-            trimedText.endsWith("dernieres")) {
+        if (trimmedText.endsWith("dernière") || 
+            trimmedText.endsWith("dernières") ||
+            trimmedText.endsWith("derniere") || 
+            trimmedText.endsWith("dernieres")) {
             swift = -1;
         }
 
@@ -201,19 +201,19 @@ export class FrenchDatePeriodParserConfiguration implements IDatePeriodParserCon
     }
 
     getSwiftYear(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = -10;
-        if (trimedText.endsWith("prochain") || trimedText.endsWith("prochaine")){
+        if (trimmedText.endsWith("prochain") || trimmedText.endsWith("prochaine")){
             swift = 1;
         }
 
-        if (trimedText.endsWith("dernières") || 
-            trimedText.endsWith("dernière") ||
-            trimedText.endsWith("dernieres") || 
-            trimedText.endsWith("derniere") || 
-            trimedText.endsWith("dernier")) {
+        if (trimmedText.endsWith("dernières") || 
+            trimmedText.endsWith("dernière") ||
+            trimmedText.endsWith("dernieres") || 
+            trimmedText.endsWith("derniere") || 
+            trimmedText.endsWith("dernier")) {
             swift = -1;
-        } else if (trimedText.startsWith("cette"))
+        } else if (trimmedText.startsWith("cette"))
         {
             swift = 0;
         }
@@ -222,44 +222,44 @@ export class FrenchDatePeriodParserConfiguration implements IDatePeriodParserCon
     }
 
     isFuture(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.FutureStartTerms.some(o => trimedText.startsWith(o)) ||
-            FrenchDateTime.FutureEndTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.FutureStartTerms.some(o => trimmedText.startsWith(o)) ||
+            FrenchDateTime.FutureEndTerms.some(o => trimmedText.endsWith(o));
     }
 
     isYearToDate(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.YearToDateTerms.some(o => trimedText === o);
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.YearToDateTerms.some(o => trimmedText === o);
     }
 
     isMonthToDate(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.MonthToDateTerms.some(o => trimedText === o);
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.MonthToDateTerms.some(o => trimmedText === o);
     }
 
     isWeekOnly(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.WeekTerms.some(o => trimedText.endsWith(o)) &&
-            !FrenchDateTime.WeekendTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.WeekTerms.some(o => trimmedText.endsWith(o)) &&
+            !FrenchDateTime.WeekendTerms.some(o => trimmedText.endsWith(o));
     }
 
     isWeekend(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.WeekendTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.WeekendTerms.some(o => trimmedText.endsWith(o));
     }
 
     isMonthOnly(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.MonthTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.MonthTerms.some(o => trimmedText.endsWith(o));
     }
 
     isYearOnly(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.YearTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.YearTerms.some(o => trimmedText.endsWith(o));
     }
 
     isLastCardinal(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return FrenchDateTime.LastCardinalTerms.some(o => trimedText === o);
+        let trimmedText = source.trim().toLowerCase();
+        return FrenchDateTime.LastCardinalTerms.some(o => trimmedText === o);
     }
 }

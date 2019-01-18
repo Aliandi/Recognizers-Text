@@ -141,26 +141,26 @@ export class FrenchDateParserConfiguration implements IDateParserConfiguration {
 
     getSwiftDay(source: string): number {
 
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = 0;
 
-        if (trimedText === "aujourd'hui" || trimedText === "auj") {
+        if (trimmedText === "aujourd'hui" || trimmedText === "auj") {
             swift = 0;
-        } else if (trimedText === "demain" ||
-            trimedText.endsWith("a2m1") ||
-            trimedText.endsWith("lendemain") ||
-            trimedText.endsWith("jour suivant")) {
+        } else if (trimmedText === "demain" ||
+            trimmedText.endsWith("a2m1") ||
+            trimmedText.endsWith("lendemain") ||
+            trimmedText.endsWith("jour suivant")) {
             swift = 1;
-        } else if (trimedText === "hier") {
+        } else if (trimmedText === "hier") {
             swift = -1;
-        } else if (trimedText.endsWith("après demain") ||
-            trimedText.endsWith("après-demain") ||
-            trimedText.endsWith("apres-demain")) {
+        } else if (trimmedText.endsWith("après demain") ||
+            trimmedText.endsWith("après-demain") ||
+            trimmedText.endsWith("apres-demain")) {
             swift = 2;
-        } else if (trimedText.endsWith("avant-hier") ||
-            trimedText.endsWith("avant hier")) {
+        } else if (trimmedText.endsWith("avant-hier") ||
+            trimmedText.endsWith("avant hier")) {
             swift = -2;
-        } else if (trimedText.endsWith("dernier")) {
+        } else if (trimmedText.endsWith("dernier")) {
             swift = -1;
         }
 
@@ -168,14 +168,14 @@ export class FrenchDateParserConfiguration implements IDateParserConfiguration {
     }
 
     getSwiftMonth(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = 0;
-        if (trimedText.endsWith("prochaine") || trimedText.endsWith("prochain")) {
+        if (trimmedText.endsWith("prochaine") || trimmedText.endsWith("prochain")) {
             swift = 1;
-        } else if (trimedText === "dernière" ||
-            trimedText.endsWith("dernières") ||
-            trimedText.endsWith("derniere") ||
-            trimedText.endsWith("dernieres")) {
+        } else if (trimmedText === "dernière" ||
+            trimmedText.endsWith("dernières") ||
+            trimmedText.endsWith("derniere") ||
+            trimmedText.endsWith("dernieres")) {
             swift = -1;
         }
 
@@ -183,10 +183,10 @@ export class FrenchDateParserConfiguration implements IDateParserConfiguration {
     }
 
     isCardinalLast(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return (trimedText.endsWith("dernière") || 
-            trimedText.endsWith("dernières") || 
-            trimedText.endsWith("derniere") || 
-            trimedText.endsWith("dernieres"));
+        let trimmedText = source.trim().toLowerCase();
+        return (trimmedText.endsWith("dernière") || 
+            trimmedText.endsWith("dernières") || 
+            trimmedText.endsWith("derniere") || 
+            trimmedText.endsWith("dernieres"));
     }
 }

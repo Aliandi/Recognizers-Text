@@ -358,9 +358,9 @@ export class BaseDateTimePeriodParser implements IDateTimeParser {
     protected mergeDateAndTimePeriods( text:string, referenceTime:Date):DateTimeResolutionResult
     {
         let ret = new DateTimeResolutionResult();
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
 
-        let er = this.config.timePeriodExtractor.extract(trimedText, referenceTime);
+        let er = this.config.timePeriodExtractor.extract(trimmedText, referenceTime);
         if (er.length !== 1)
         {
             return this.parseSimpleCases(text, referenceTime);
@@ -379,11 +379,11 @@ export class BaseDateTimePeriodParser implements IDateTimeParser {
         if (!StringUtility.isNullOrEmpty(timePeriodTimex)
             && timePeriodTimex.startsWith("("))
         {
-            let dateResult = this.config.dateExtractor.extract(trimedText.replace(er[0].text, ""), referenceTime);
+            let dateResult = this.config.dateExtractor.extract(trimmedText.replace(er[0].text, ""), referenceTime);
             let dateStr = "";
             let futureTime:Date;
             let pastTime: Date;
-            if (dateResult.length === 1 && trimedText.replace(er[0].text, "").trim() === dateResult[0].text) {
+            if (dateResult.length === 1 && trimmedText.replace(er[0].text, "").trim() === dateResult[0].text) {
                 let pr = this.config.dateParser.parse(dateResult[0], referenceTime);
                 if (pr.value) {
                     futureTime = pr.value.futureValue;

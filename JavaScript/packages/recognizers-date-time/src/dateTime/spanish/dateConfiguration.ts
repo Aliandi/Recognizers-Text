@@ -154,26 +154,26 @@ export class SpanishDateParserConfiguration implements IDateParserConfiguration 
 
     getSwiftDay(source: string): number {
 
-        let trimedText = SpanishDateParserConfiguration.normalize(source.trim().toLowerCase());
+        let trimmedText = SpanishDateParserConfiguration.normalize(source.trim().toLowerCase());
         let swift = 0;
 
         // TODO: add the relative day logic if needed. If yes, the whole method should be abstracted.
-        if (trimedText === "hoy" || trimedText === "el dia") {
+        if (trimmedText === "hoy" || trimmedText === "el dia") {
             swift = 0;
-        } else if (trimedText === "mañana" ||
-            trimedText.endsWith("dia siguiente") ||
-            trimedText.endsWith("el dia de mañana") ||
-            trimedText.endsWith("proximo dia")) {
+        } else if (trimmedText === "mañana" ||
+            trimmedText.endsWith("dia siguiente") ||
+            trimmedText.endsWith("el dia de mañana") ||
+            trimmedText.endsWith("proximo dia")) {
             swift = 1;
-        } else if (trimedText === "ayer") {
+        } else if (trimmedText === "ayer") {
             swift = -1;
-        } else if (trimedText.endsWith("pasado mañana") ||
-            trimedText.endsWith("dia despues de mañana")) {
+        } else if (trimmedText.endsWith("pasado mañana") ||
+            trimmedText.endsWith("dia despues de mañana")) {
             swift = 2;
-        } else if (trimedText.endsWith("anteayer") ||
-            trimedText.endsWith("dia antes de ayer")) {
+        } else if (trimmedText.endsWith("anteayer") ||
+            trimmedText.endsWith("dia antes de ayer")) {
             swift = -2;
-        } else if (trimedText.endsWith("ultimo dia")) {
+        } else if (trimmedText.endsWith("ultimo dia")) {
             swift = -1;
         }
 
@@ -181,13 +181,13 @@ export class SpanishDateParserConfiguration implements IDateParserConfiguration 
     }
 
     getSwiftMonth(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = 0;
-        if (RegExpUtility.getMatches(SpanishDateParserConfiguration.nextPrefixRegex, trimedText).length) {
+        if (RegExpUtility.getMatches(SpanishDateParserConfiguration.nextPrefixRegex, trimmedText).length) {
             swift = 1;
         }
 
-        if (RegExpUtility.getMatches(SpanishDateParserConfiguration.pastPrefixRegex, trimedText).length) {
+        if (RegExpUtility.getMatches(SpanishDateParserConfiguration.pastPrefixRegex, trimmedText).length) {
             swift = -1;
         }
 
@@ -195,8 +195,8 @@ export class SpanishDateParserConfiguration implements IDateParserConfiguration 
     }
 
     isCardinalLast(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return RegExpUtility.getMatches(SpanishDateParserConfiguration.pastPrefixRegex, trimedText).length > 0;
+        let trimmedText = source.trim().toLowerCase();
+        return RegExpUtility.getMatches(SpanishDateParserConfiguration.pastPrefixRegex, trimmedText).length > 0;
     }
 
     private static normalize(source: string): string {

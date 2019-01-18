@@ -126,16 +126,16 @@ export class SpanishDateTimeParserConfiguration implements IDateTimeParserConfig
     }
 
     getMatchedNowTimex(text: string): { matched: boolean; timex: string; } {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let timex = "";
-        if (trimedText.endsWith("ahora") || trimedText.endsWith("mismo") || trimedText.endsWith("momento")) {
+        if (trimmedText.endsWith("ahora") || trimmedText.endsWith("mismo") || trimmedText.endsWith("momento")) {
             timex = "PRESENT_REF";
         }
-        else if (trimedText.endsWith("posible") || trimedText.endsWith("pueda") ||
-            trimedText.endsWith("puedas") || trimedText.endsWith("podamos") || trimedText.endsWith("puedan")) {
+        else if (trimmedText.endsWith("posible") || trimmedText.endsWith("pueda") ||
+            trimmedText.endsWith("puedas") || trimmedText.endsWith("podamos") || trimmedText.endsWith("puedan")) {
             timex = "FUTURE_REF";
         }
-        else if (trimedText.endsWith("mente")) {
+        else if (trimmedText.endsWith("mente")) {
             timex = "PAST_REF";
         }
         else {
@@ -152,13 +152,13 @@ export class SpanishDateTimeParserConfiguration implements IDateTimeParserConfig
     }
 
     getSwiftDay(text: string): number {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let swift = 0;
 
-        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimmedText).matched) {
             swift = -1;
         }
-        else if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimedText).matched) {
+        else if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimmedText).matched) {
             swift = 1;
         }
 
@@ -167,14 +167,14 @@ export class SpanishDateTimeParserConfiguration implements IDateTimeParserConfig
     }
 
     getHour(text: string, hour: number): number {
-        let trimedText = text.trim().toLowerCase();
+        let trimmedText = text.trim().toLowerCase();
         let result = hour;
 
         // TODO: Replace with a regex
-        if ((trimedText.endsWith("mañana") || trimedText.endsWith("madrugada")) && hour >= 12) {
+        if ((trimmedText.endsWith("mañana") || trimmedText.endsWith("madrugada")) && hour >= 12) {
             result -= 12;
         }
-        else if (!(trimedText.endsWith("mañana") || trimedText.endsWith("madrugada")) && hour < 12) {
+        else if (!(trimmedText.endsWith("mañana") || trimmedText.endsWith("madrugada")) && hour < 12) {
             result += 12;
         }
 

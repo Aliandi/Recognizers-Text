@@ -182,14 +182,14 @@ export class SpanishDatePeriodParserConfiguration implements IDatePeriodParserCo
     }
 
     getSwiftDayOrMonth(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = 0;
 
-        if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimmedText).matched) {
             swift = 1;
         }
 
-        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimmedText).matched) {
             swift = -1;
         }
 
@@ -197,16 +197,16 @@ export class SpanishDatePeriodParserConfiguration implements IDatePeriodParserCo
     }
 
     getSwiftYear(source: string): number {
-        let trimedText = source.trim().toLowerCase();
+        let trimmedText = source.trim().toLowerCase();
         let swift = -10;
-        if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimmedText).matched) {
             swift = 1;
         }
 
-        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimedText).matched) {
+        if (RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimmedText).matched) {
             swift = -1;
         }
-        else if (RegExpUtility.getFirstMatchIndex(this.thisPrefixRegex, trimedText).matched) {
+        else if (RegExpUtility.getFirstMatchIndex(this.thisPrefixRegex, trimmedText).matched) {
             swift = 0;
         }
 
@@ -214,44 +214,44 @@ export class SpanishDatePeriodParserConfiguration implements IDatePeriodParserCo
     }
 
     isFuture(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return RegExpUtility.getFirstMatchIndex(this.thisPrefixRegex, trimedText).matched ||
-            RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimedText).matched;
+        let trimmedText = source.trim().toLowerCase();
+        return RegExpUtility.getFirstMatchIndex(this.thisPrefixRegex, trimmedText).matched ||
+            RegExpUtility.getFirstMatchIndex(this.nextPrefixRegex, trimmedText).matched;
     }
 
     isYearToDate(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return SpanishDateTime.YearToDateTerms.some(o => trimedText === o);
+        let trimmedText = source.trim().toLowerCase();
+        return SpanishDateTime.YearToDateTerms.some(o => trimmedText === o);
     }
 
     isMonthToDate(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return SpanishDateTime.MonthToDateTerms.some(o => trimedText === o);
+        let trimmedText = source.trim().toLowerCase();
+        return SpanishDateTime.MonthToDateTerms.some(o => trimmedText === o);
     }
 
     isWeekOnly(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return SpanishDateTime.WeekTerms.some(o => trimedText.endsWith(o)) &&
-            !SpanishDateTime.WeekendTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return SpanishDateTime.WeekTerms.some(o => trimmedText.endsWith(o)) &&
+            !SpanishDateTime.WeekendTerms.some(o => trimmedText.endsWith(o));
     }
 
     isWeekend(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return SpanishDateTime.WeekendTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return SpanishDateTime.WeekendTerms.some(o => trimmedText.endsWith(o));
     }
 
     isMonthOnly(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return SpanishDateTime.MonthTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return SpanishDateTime.MonthTerms.some(o => trimmedText.endsWith(o));
     }
 
     isYearOnly(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return SpanishDateTime.YearTerms.some(o => trimedText.endsWith(o));
+        let trimmedText = source.trim().toLowerCase();
+        return SpanishDateTime.YearTerms.some(o => trimmedText.endsWith(o));
     }
 
     isLastCardinal(source: string): boolean {
-        let trimedText = source.trim().toLowerCase();
-        return RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimedText).matched;
+        let trimmedText = source.trim().toLowerCase();
+        return RegExpUtility.getFirstMatchIndex(this.pastPrefixRegex, trimmedText).matched;
     }
 }

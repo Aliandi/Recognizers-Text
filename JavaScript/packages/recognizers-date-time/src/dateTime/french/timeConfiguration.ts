@@ -64,19 +64,19 @@ export class FrenchTimeParserConfiguration implements ITimeParserConfiguration {
 
     adjustByPrefix(prefix: string, adjust: { hour: number; min: number; hasMin: boolean; }) {
         let deltaMin = 0;
-        let trimedPrefix = prefix.trim().toLowerCase();
+        let trimmedPrefix = prefix.trim().toLowerCase();
 
-        if (trimedPrefix.endsWith("demie")) {
+        if (trimmedPrefix.endsWith("demie")) {
             deltaMin = 30;
         }
-        else if (trimedPrefix.endsWith("un quart") || trimedPrefix.endsWith("quart")) {
+        else if (trimmedPrefix.endsWith("un quart") || trimmedPrefix.endsWith("quart")) {
             deltaMin = 15;
         }
-        else if (trimedPrefix.endsWith("trois quarts")) {
+        else if (trimmedPrefix.endsWith("trois quarts")) {
             deltaMin = 45;
         }
         else {
-            let matches = RegExpUtility.getMatches(this.lessThanOneHour, trimedPrefix);
+            let matches = RegExpUtility.getMatches(this.lessThanOneHour, trimmedPrefix);
             if (matches.length) {
                 let match = matches[0];
                 let minStr = match.groups("deltamin").value;
@@ -92,7 +92,7 @@ export class FrenchTimeParserConfiguration implements ITimeParserConfiguration {
             }
         }
 
-        if (trimedPrefix.endsWith("à")) {
+        if (trimmedPrefix.endsWith("à")) {
             deltaMin = -deltaMin;
         }
 
@@ -106,13 +106,13 @@ export class FrenchTimeParserConfiguration implements ITimeParserConfiguration {
     }
 
     adjustBySuffix(suffix: string, adjust: { hour: number; min: number; hasMin: boolean; hasAm: boolean; hasPm: boolean; }) {
-        let trimedSuffix = suffix.trim().toLowerCase();
+        let trimmedSuffix = suffix.trim().toLowerCase();
 
         let deltaHour = 0;
-        let matches = RegExpUtility.getMatches(this.timeSuffix, trimedSuffix);
+        let matches = RegExpUtility.getMatches(this.timeSuffix, trimmedSuffix);
         if (matches.length) {
             let match = matches[0];
-            if (match.index === 0 && match.length === trimedSuffix.length) {
+            if (match.index === 0 && match.length === trimmedSuffix.length) {
                 let oclockStr = match.groups("heures").value;
                 if (!oclockStr) {
                     let amStr = match.groups("am").value;
