@@ -176,7 +176,7 @@ class BaseMergedExtractor(DateTimeExtractor):
                     if index not in overlap_indexes:
                         temp_dst.append(dest)
 
-                # insert at the first overlap occurence to keep the order
+                # insert at the first overlap occurrence to keep the order
                 temp_dst.insert(first_index, value)
                 destination = temp_dst
         return destination
