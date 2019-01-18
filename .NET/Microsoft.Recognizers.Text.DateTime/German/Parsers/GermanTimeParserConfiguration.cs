@@ -52,23 +52,23 @@ namespace Microsoft.Recognizers.Text.DateTime.German
         public void AdjustByPrefix(string prefix, ref int hour, ref int min, ref bool hasMin)
         {
             var deltaMin = 0;
-            var trimedPrefix = prefix.Trim().ToLowerInvariant();
+            var trimmedPrefix = prefix.Trim().ToLowerInvariant();
 
-            if (trimedPrefix.StartsWith("halb"))
+            if (trimmedPrefix.StartsWith("halb"))
             {
                 deltaMin = -30;
             }
-            else if (trimedPrefix.StartsWith("viertel nach"))
+            else if (trimmedPrefix.StartsWith("viertel nach"))
             {
                 deltaMin = 15;
             }
-            else if (trimedPrefix.StartsWith("viertel vor"))
+            else if (trimmedPrefix.StartsWith("viertel vor"))
             {
                 deltaMin = -15;
             }
             else
             {
-                var match = GermanTimeExtractorConfiguration.LessThanOneHour.Match(trimedPrefix);
+                var match = GermanTimeExtractorConfiguration.LessThanOneHour.Match(trimmedPrefix);
                 var minStr = match.Groups["deltamin"].Value;
                 if (!string.IsNullOrWhiteSpace(minStr))
                 {
@@ -81,7 +81,7 @@ namespace Microsoft.Recognizers.Text.DateTime.German
                 }
             }
 
-            if (trimedPrefix.EndsWith("zum"))
+            if (trimmedPrefix.EndsWith("zum"))
             {
                 deltaMin = -deltaMin;
             }

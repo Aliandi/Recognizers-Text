@@ -37,23 +37,23 @@ namespace Microsoft.Recognizers.Text.DateTime.Spanish
         public void AdjustByPrefix(string prefix, ref int hour, ref int min, ref bool hasMin)
         {
             var deltaMin = 0;
-            var trimedPrefix = prefix.Trim().ToLowerInvariant();
+            var trimmedPrefix = prefix.Trim().ToLowerInvariant();
 
-            if (trimedPrefix.StartsWith("cuarto") || trimedPrefix.StartsWith("y cuarto"))
+            if (trimmedPrefix.StartsWith("cuarto") || trimmedPrefix.StartsWith("y cuarto"))
             {
                 deltaMin = 15;
             }
-            else if (trimedPrefix.StartsWith("menos cuarto"))
+            else if (trimmedPrefix.StartsWith("menos cuarto"))
             {
                 deltaMin = -15;
             }
-            else if (trimedPrefix.StartsWith("media") || trimedPrefix.StartsWith("y media"))
+            else if (trimmedPrefix.StartsWith("media") || trimmedPrefix.StartsWith("y media"))
             {
                 deltaMin = 30;
             }
             else
             {
-                var match = SpanishTimeExtractorConfiguration.LessThanOneHour.Match(trimedPrefix);
+                var match = SpanishTimeExtractorConfiguration.LessThanOneHour.Match(trimmedPrefix);
                 var minStr = match.Groups["deltamin"].Value;
                 if (!string.IsNullOrWhiteSpace(minStr))
                 {
@@ -66,14 +66,14 @@ namespace Microsoft.Recognizers.Text.DateTime.Spanish
                 }
             }
 
-            if (trimedPrefix.EndsWith("pasadas") || trimedPrefix.EndsWith("pasados") ||
-                trimedPrefix.EndsWith("pasadas las") || trimedPrefix.EndsWith("pasados las") ||
-                trimedPrefix.EndsWith("pasadas de las") || trimedPrefix.EndsWith("pasados de las"))
+            if (trimmedPrefix.EndsWith("pasadas") || trimmedPrefix.EndsWith("pasados") ||
+                trimmedPrefix.EndsWith("pasadas las") || trimmedPrefix.EndsWith("pasados las") ||
+                trimmedPrefix.EndsWith("pasadas de las") || trimmedPrefix.EndsWith("pasados de las"))
             {
             // deltaMin it's positive
             }
-            else if (trimedPrefix.EndsWith("para la") || trimedPrefix.EndsWith("para las") ||
-                     trimedPrefix.EndsWith("antes de la") || trimedPrefix.EndsWith("antes de las"))
+            else if (trimmedPrefix.EndsWith("para la") || trimmedPrefix.EndsWith("para las") ||
+                     trimmedPrefix.EndsWith("antes de la") || trimmedPrefix.EndsWith("antes de las"))
             {
                 deltaMin = -deltaMin;
             }
@@ -90,11 +90,11 @@ namespace Microsoft.Recognizers.Text.DateTime.Spanish
 
         public void AdjustBySuffix(string suffix, ref int hour, ref int min, ref bool hasMin, ref bool hasAm, ref bool hasPm)
         {
-            var trimedSuffix = suffix.Trim().ToLowerInvariant();
-            AdjustByPrefix(trimedSuffix, ref hour, ref min, ref hasMin);
+            var trimmedSuffix = suffix.Trim().ToLowerInvariant();
+            AdjustByPrefix(trimmedSuffix, ref hour, ref min, ref hasMin);
 
             var deltaHour = 0;
-            var match = SpanishTimeExtractorConfiguration.TimeSuffix.MatchExact(trimedSuffix, trim: true);
+            var match = SpanishTimeExtractorConfiguration.TimeSuffix.MatchExact(trimmedSuffix, trim: true);
 
             if (match.Success)
             {

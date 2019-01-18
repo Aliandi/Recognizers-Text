@@ -46,23 +46,23 @@ namespace Microsoft.Recognizers.Text.DateTime.English
         {
             int deltaMin;
 
-            var trimedPrefix = prefix.Trim().ToLowerInvariant();
+            var trimmedPrefix = prefix.Trim().ToLowerInvariant();
 
-            if (trimedPrefix.StartsWith("half"))
+            if (trimmedPrefix.StartsWith("half"))
             {
                 deltaMin = 30;
             }
-            else if (trimedPrefix.StartsWith("a quarter") || trimedPrefix.StartsWith("quarter"))
+            else if (trimmedPrefix.StartsWith("a quarter") || trimmedPrefix.StartsWith("quarter"))
             {
                 deltaMin = 15;
             }
-            else if (trimedPrefix.StartsWith("three quarter"))
+            else if (trimmedPrefix.StartsWith("three quarter"))
             {
                 deltaMin = 45;
             }
             else
             {
-                var match = EnglishTimeExtractorConfiguration.LessThanOneHour.Match(trimedPrefix);
+                var match = EnglishTimeExtractorConfiguration.LessThanOneHour.Match(trimmedPrefix);
                 var minStr = match.Groups["deltamin"].Value;
                 if (!string.IsNullOrWhiteSpace(minStr))
                 {
@@ -75,7 +75,7 @@ namespace Microsoft.Recognizers.Text.DateTime.English
                 }
             }
 
-            if (trimedPrefix.EndsWith("to"))
+            if (trimmedPrefix.EndsWith("to"))
             {
                 deltaMin = -deltaMin;
             }
