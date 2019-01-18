@@ -73,8 +73,8 @@ namespace Microsoft.Recognizers.Text.DateTime
 
                 if (match.Success)
                 {
-                    // LUIS value string will be set in Match2Date method
-                    var ret = Match2Date(match.Match, referenceDate);
+                    // LUIS value string will be set in MatchToDate method
+                    var ret = MatchToDate(match.Match, referenceDate);
                     return ret;
                 }
             }
@@ -82,7 +82,7 @@ namespace Microsoft.Recognizers.Text.DateTime
             return new DateTimeResolutionResult();
         }
 
-        private DateTimeResolutionResult Match2Date(Match match, DateObject referenceDate)
+        private DateTimeResolutionResult MatchToDate(Match match, DateObject referenceDate)
         {
             var ret = new DateTimeResolutionResult();
             var holidayStr = this.config.SanitizeHolidayToken(match.Groups["holiday"].Value.ToLowerInvariant());

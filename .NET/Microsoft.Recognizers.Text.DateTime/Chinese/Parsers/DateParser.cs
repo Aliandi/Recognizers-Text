@@ -111,8 +111,8 @@ namespace Microsoft.Recognizers.Text.DateTime.Chinese
 
                 if (match.Success)
                 {
-                    // LUIS value string will be set in Match2Date method
-                    var ret = Match2Date(match.Match, referenceDate);
+                    // LUIS value string will be set in MatchToDate method
+                    var ret = MatchToDate(match.Match, referenceDate);
                     return ret;
                 }
             }
@@ -495,7 +495,7 @@ namespace Microsoft.Recognizers.Text.DateTime.Chinese
         }
 
         // parse a regex match which includes 'day', 'month' and 'year' (optional) group
-        protected DateTimeResolutionResult Match2Date(Match match, DateObject referenceDate)
+        protected DateTimeResolutionResult MatchToDate(Match match, DateObject referenceDate)
         {
             var ret = new DateTimeResolutionResult();
 

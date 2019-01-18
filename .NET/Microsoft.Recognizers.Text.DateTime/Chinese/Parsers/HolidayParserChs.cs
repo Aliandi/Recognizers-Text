@@ -128,8 +128,8 @@ namespace Microsoft.Recognizers.Text.DateTime.Chinese
 
                 if (match.Success)
                 {
-                    // LUIS value string will be set in Match2Date method
-                    var ret = Match2Date(match, referenceDate);
+                    // LUIS value string will be set in MatchToDate method
+                    var ret = MatchToDate(match, referenceDate);
                     return ret;
                 }
             }
@@ -137,7 +137,7 @@ namespace Microsoft.Recognizers.Text.DateTime.Chinese
             return new DateTimeResolutionResult();
         }
 
-        private static DateTimeResolutionResult Match2Date(Match match, DateObject referenceDate)
+        private static DateTimeResolutionResult MatchToDate(Match match, DateObject referenceDate)
         {
             var ret = new DateTimeResolutionResult();
             var holidayStr = match.Groups["holiday"].Value.ToLower();
