@@ -92,8 +92,8 @@ public class BaseHolidayParser implements IDateTimeParser {
             int offset = 0;
             Optional<Match> match = Arrays.stream(RegExpUtility.getMatches(pattern, text)).findFirst();
             if (match.isPresent() && match.get().index == offset && match.get().length == trimmedText.length()) {
-                // LUIS value string will be set in Match2Date method
-                DateTimeResolutionResult ret = match2Date(match.get(), referenceDate);
+                // LUIS value string will be set in MatchToDate method
+                DateTimeResolutionResult ret = matchToDate(match.get(), referenceDate);
 
                 return ret;
             }
@@ -102,7 +102,7 @@ public class BaseHolidayParser implements IDateTimeParser {
         return new DateTimeResolutionResult();
     }
 
-    private DateTimeResolutionResult match2Date(Match match, LocalDateTime referenceDate) {
+    private DateTimeResolutionResult matchToDate(Match match, LocalDateTime referenceDate) {
         
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
         String holidayStr = this.config.sanitizeHolidayToken(match.getGroup("holiday").value.toLowerCase(Locale.ROOT));

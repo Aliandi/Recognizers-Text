@@ -120,8 +120,8 @@ public class BaseDateParser implements IDateTimeParser {
             }
 
             if (match.isPresent() && match.get().index == offset && match.get().length == trimmedText.length()) {
-                // LUIS value string will be set in Match2Date method
-                DateTimeResolutionResult ret = this.match2Date(match, referenceDate);
+                // LUIS value string will be set in MatchToDate method
+                DateTimeResolutionResult ret = this.matchToDate(match, referenceDate);
                 return ret;
             }
         }
@@ -606,7 +606,7 @@ public class BaseDateParser implements IDateTimeParser {
     }
 
     // parse a regex match which includes 'day', 'month' and 'year' (optional) group
-    private DateTimeResolutionResult match2Date(Optional<Match> match, LocalDateTime referenceDate) {
+    private DateTimeResolutionResult matchToDate(Optional<Match> match, LocalDateTime referenceDate) {
         DateTimeResolutionResult ret = new DateTimeResolutionResult();
 
         String monthStr = match.get().getGroup("month").value.toLowerCase();
