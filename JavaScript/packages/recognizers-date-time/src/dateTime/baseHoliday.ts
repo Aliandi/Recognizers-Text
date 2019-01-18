@@ -85,15 +85,15 @@ export class BaseHolidayParser implements IDateTimeParser {
             let offset = 0;
             let matches = RegExpUtility.getMatches(regex, trimmedText);
             if (matches.length && matches[0].index === offset && matches[0].length === trimmedText.length) {
-                // LUIS value string will be set in Match2Date method
-                let ret = this.match2Date(matches[0], referenceDate);
+                // LUIS value string will be set in MatchToDate method
+                let ret = this.matchToDate(matches[0], referenceDate);
                 return ret;
             }
         }
         return new DateTimeResolutionResult();
     }
 
-    protected match2Date(match: Match, referenceDate: Date): DateTimeResolutionResult {
+    protected matchToDate(match: Match, referenceDate: Date): DateTimeResolutionResult {
         let ret = new DateTimeResolutionResult();
         let holidayStr = this.config.sanitizeHolidayToken(match.groups("holiday").value.toLowerCase());
 

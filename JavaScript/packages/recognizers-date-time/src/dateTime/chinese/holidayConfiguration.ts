@@ -149,7 +149,7 @@ export class ChineseHolidayParser extends BaseHolidayParser {
         return RegExpUtility.isMatch(this.lunarHolidayRegex, source);
     }
 
-    protected match2Date(match: Match, referenceDate: Date): DateTimeResolutionResult {
+    protected matchToDate(match: Match, referenceDate: Date): DateTimeResolutionResult {
         let ret = new DateTimeResolutionResult();
 
         let holidayStr = this.config.sanitizeHolidayToken(match.groups("holiday").value.toLowerCase());
