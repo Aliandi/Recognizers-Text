@@ -138,11 +138,11 @@ public class BaseSetExtractor implements IDateTimeExtractor {
         matches = RegExpUtility.getMatches(setWeekDayRegex, input);
         for (Match match : matches) {
             if (match != null) {
-                String trimedText = sb.delete(match.index, match.index + match.length).toString();
-                sb = new StringBuilder(trimedText);
-                trimedText = sb.insert(match.index, match.getGroup("weekday").value).toString();
+                String trimmedText = sb.delete(match.index, match.index + match.length).toString();
+                sb = new StringBuilder(trimmedText);
+                trimmedText = sb.insert(match.index, match.getGroup("weekday").value).toString();
 
-                List<ExtractResult> ers = extractor.extract(trimedText, reference);
+                List<ExtractResult> ers = extractor.extract(trimmedText, reference);
                 for (ExtractResult er : ers) {
                     if (er.getStart() <= match.index && er.getText().contains(match.getGroup("weekday").value)) {
                         int len = er.getLength() + 1;
