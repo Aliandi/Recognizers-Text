@@ -110,12 +110,12 @@ class BaseHolidayParser(DateTimeParser):
         for pattern in self.config.holiday_regex_list:
             match = pattern.search(trimmed_text)
             if match and match.pos == 0 and match.endpos == len(trimmed_text):
-                result = self._match2date(match, reference)
+                result = self._matchToDate(match, reference)
                 return result
 
         return DateTimeResolutionResult()
 
-    def _match2date(self, match: Match, reference: datetime) -> DateTimeResolutionResult:
+    def _matchToDate(self, match: Match, reference: datetime) -> DateTimeResolutionResult:
         result = DateTimeResolutionResult()
         holiday_str = self.config.sanitize_holiday_token(match.group('holiday').lower())
 

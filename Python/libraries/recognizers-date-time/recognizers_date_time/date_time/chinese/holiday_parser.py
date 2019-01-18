@@ -167,7 +167,7 @@ class ChineseHolidayParser(BaseHolidayParser):
     def __is_lunar(self, source: str) -> bool:
         return self.__lunar_holiday_regex.search(source) is not None
 
-    def _match2date(self, match: Match, reference: datetime) -> DateTimeResolutionResult:
+    def _matchToDate(self, match: Match, reference: datetime) -> DateTimeResolutionResult:
         result = DateTimeResolutionResult()
         holiday_str = self.config.sanitize_holiday_token(match.group('holiday').lower())
 
