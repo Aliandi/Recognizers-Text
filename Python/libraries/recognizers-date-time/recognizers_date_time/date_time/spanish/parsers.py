@@ -51,7 +51,7 @@ class SpanishDateTimePeriodParser(BaseDateTimePeriodParser):
         # handle Date followed by morning, afternoon
         # Add handling code to handle morning, afternoon followed by Date
         # Add handling code to handle early/late morning, afternoon
-        # TODO: use regex from config: match = this.config.TimeOfDayRegex.Match(trimedText.Substring(startIndex));
+        # TODO: use regex from config: match = this.config.TimeOfDayRegex.Match(trimmedText.Substring(startIndex));
         matches = list(RegExpUtility.get_safe_reg_exp(SpanishDateTime.TimeOfDayRegex).finditer(trimmed_text[start_index:]))
         if matches:
             match = matches[0]
