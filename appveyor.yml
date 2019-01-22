@@ -41,34 +41,23 @@ build_script:
 
     cd .NET\
     
-    build.ci.cmd
+    build.cmd
 
     cd ..\JavaScript\
     
-    build.ci.cmd
+    build.cmd
     
     cd ..\Python\
     
-    build.ci.cmd
+    build.cmd
 
     cd ..\java\
     
-    build.ci.cmd
+    build.cmd
     
 test:
           
 test_script:
-    cd ..\.NET\
-    
-    tests.ci.cmd
-
-    cd ..\JavaScript\
-    
-    tests.ci.cmd
-    
-    cd ..\java\
-    
-    tests.ci.cmd
 
 artifacts:
     - path: '**\*Microsoft.Recognizers*.nupkg'
