@@ -14,6 +14,7 @@ import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserC
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.Arrays;
 import java.util.List;
@@ -538,13 +539,15 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
     public boolean isWeekOnly(String text) {
         String trimmedText = text.trim().toLowerCase();
         Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
-        return trimmedText.endsWith("week") || trimmedText.contains(" week ") && matchAfterNext.isPresent();
+        Boolean containsKeyword = EnglishDateTime.WeekTerms.stream().anyMatch(x -> trimmedText.contains(x));
+        return containsKeyword || containsKeyword && matchAfterNext.isPresent();
     }
 
     @Override
     public boolean isYearOnly(String text) {
         String trimmedText = text.trim().toLowerCase();
-        return EnglishDateTime.YearTerms.stream().anyMatch(o -> trimmedText.endsWith(o)) ||
+        Boolean containsKeyword = EnglishDateTime.YearTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
+        return  ||
             (getYearTermsPadded().anyMatch(o -> trimmedText.contains(o)) && RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText).length > 0) ||
             (EnglishDateTime.GenericYearTerms.stream().anyMatch(o -> trimmedText.endsWith(o)) && RegExpUtility.getMatches(unspecificEndOfRangeRegex, trimmedText).length > 0);
     }
