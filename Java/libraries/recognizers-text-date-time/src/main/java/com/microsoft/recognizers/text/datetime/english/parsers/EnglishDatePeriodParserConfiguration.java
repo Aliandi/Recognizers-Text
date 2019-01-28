@@ -14,13 +14,11 @@ import com.microsoft.recognizers.text.datetime.parsers.config.IDatePeriodParserC
 import com.microsoft.recognizers.text.datetime.resources.EnglishDateTime;
 import com.microsoft.recognizers.text.utilities.Match;
 import com.microsoft.recognizers.text.utilities.RegExpUtility;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfiguration implements IDatePeriodParserConfiguration {
 
@@ -505,21 +503,18 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
 
     @Override
     public boolean isFuture(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return (trimmedText.startsWith("this") || trimmedText.startsWith("next"));
+        return (startsWithKeyword(EnglishDateTime.FutureTerms, trimmedText(text)));
     }
 
     @Override
     public boolean isLastCardinal(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        return trimmedText.equals("last");
+        return equalsKeyword(EnglishDateTime.LastCardinalTerms, trimmedText(text));
     }
 
     @Override
     public boolean isMonthOnly(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
-        return trimmedText.endsWith("month") || trimmedText.contains(" month ") && matchAfterNext.isPresent();
+        return endsWithKeyword(EnglishDateTime.MonthTerms, trimmedText(text)) ||
+            containsKeyword(EnglishDateTime.MonthTerms, trimmedText(text)) && matchAfterNext(trimmedText(text)).isPresent();
     }
 
     @Override
@@ -530,26 +525,22 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
 
     @Override
     public boolean isWeekend(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
-        return trimmedText.endsWith("weekend") || trimmedText.contains(" weekend ") && matchAfterNext.isPresent();
+        return endsWithKeyword(EnglishDateTime.WeekendTerms, trimmedText(text)) ||
+            containsKeyword(EnglishDateTime.WeekendTerms, trimmedText(text)) && matchAfterNext(text).isPresent();
     }
 
     @Override
     public boolean isWeekOnly(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        Optional<Match> matchAfterNext = Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
-        Boolean containsKeyword = EnglishDateTime.WeekTerms.stream().anyMatch(x -> trimmedText.contains(x));
-        return containsKeyword || containsKeyword && matchAfterNext.isPresent();
+        return !containsKeyword(EnglishDateTime.WeekendTerms, trimmedText(text)) &&
+            ((endsWithKeyword(EnglishDateTime.WeekTerms,trimmedText(text)) ||
+            containsKeyword(EnglishDateTime.WeekTerms, trimmedText(text)) && matchAfterNext(trimmedText(text)).isPresent()));
     }
 
     @Override
     public boolean isYearOnly(String text) {
-        String trimmedText = text.trim().toLowerCase();
-        Boolean containsKeyword = EnglishDateTime.YearTerms.stream().anyMatch(o -> trimmedText.endsWith(o));
-        return  ||
-            (getYearTermsPadded().anyMatch(o -> trimmedText.contains(o)) && RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText).length > 0) ||
-            (EnglishDateTime.GenericYearTerms.stream().anyMatch(o -> trimmedText.endsWith(o)) && RegExpUtility.getMatches(unspecificEndOfRangeRegex, trimmedText).length > 0);
+        return containsKeyword(EnglishDateTime.YearTerms, trimmedText(text)) ||
+            containsKeyword(EnglishDateTime.YearTerms,trimmedText(text)) && RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText(text)).length > 0 ||
+            endsWithKeyword(EnglishDateTime.GenericYearTerms, trimmedText(text)) && RegExpUtility.getMatches(unspecificEndOfRangeRegex, trimmedText(text)).length > 0;
     }
 
     @Override
@@ -558,7 +549,29 @@ public class EnglishDatePeriodParserConfiguration extends BaseOptionsConfigurati
         return trimmedText.equals("year to date");
     }
 
-    private Stream<String> getYearTermsPadded() {
-        return EnglishDateTime.YearTerms.stream().map(i -> String.format(" %s ", i));
+    // Helper methods
+    private Optional<Match> matchAfterNext(String trimmedText) {
+        return Arrays.stream(RegExpUtility.getMatches(afterNextSuffixRegex, trimmedText)).findFirst();
     }
+
+    private String trimmedText(String text) {
+        return text.trim().toLowerCase();
+    }
+
+    private Boolean containsKeyword(List<String> term, String trimmedText) {
+        return term.stream().anyMatch(o -> trimmedText.contains(o));
+    }
+
+    private Boolean startsWithKeyword(List<String> term, String trimmedText) {
+        return term.stream().anyMatch(o ->  trimmedText.startsWith(o));
+    }
+
+    private Boolean endsWithKeyword(List<String> term, String trimmedText) {
+        return term.stream().anyMatch(o -> trimmedText.endsWith(o));
+    }
+
+    private Boolean equalsKeyword(List<String> term, String trimmedText) {
+        return term.stream().anyMatch(o ->  trimmedText.equals(o));
+    }
+
 }
