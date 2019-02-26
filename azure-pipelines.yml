@@ -11,5 +11,4 @@ variables:
 
 steps:
 - script: .\Build.ci.cmd
-  workingDirectory: .\.NET
   displayName: 'dotnet build $(buildConfiguration)'
