@@ -13,6 +13,5 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: cd .NET
-    Build.ci.cmd
+- script: cd .NET && Build.ci.cmd
   displayName: 'dotnet build $(buildConfiguration)'
