@@ -13,6 +13,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: 
-    CALL !MSBuild! Microsoft.Recognizers.Text.sln /t:Clean,Build /p:Configuration=Release
+- script: cd .NET
+    BuildCI.cmd
   displayName: 'dotnet build $(buildConfiguration)'
