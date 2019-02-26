@@ -14,5 +14,5 @@ variables:
 
 steps:
 - script: cd .NET
-    BuildCI.cmd
+    Build.ci.cmd
   displayName: 'dotnet build $(buildConfiguration)'
