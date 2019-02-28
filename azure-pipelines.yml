@@ -13,5 +13,5 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: cd .NET && build.ci.cmd
+- script: cd .NET && CALL build.ci.cmd
   displayName: 'CD and Build'
