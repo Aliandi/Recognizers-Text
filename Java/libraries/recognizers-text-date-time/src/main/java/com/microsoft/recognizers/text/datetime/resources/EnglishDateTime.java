@@ -546,9 +546,11 @@ public class EnglishDateTime {
             .replace("{AmRegex}", AmRegex)
             .replace("{RangePrefixRegex}", RangePrefixRegex);
 
-    public static final String PureNumBetweenAnd = "(between\\s+)({HourRegex}|{PeriodHourNumRegex})(\\s*(?<leftDesc>{DescRegex}))?\\s*{RangeConnectorRegex}\\s*({HourRegex}|{PeriodHourNumRegex})(?<rightDesc>\\s*({PmRegex}|{AmRegex}|{DescRegex}))?"
+    public static final String PureNumBetweenAnd = "(between\\s+)(({BaseDateTime.TwoDigitHourRegex}{BaseDateTime.TwoDigitMinuteRegex})|{HourRegex}|{PeriodHourNumRegex})(\\s*(?<leftDesc>{DescRegex}))?\\s*{RangeConnectorRegex}\\s*(({BaseDateTime.TwoDigitHourRegex}{BaseDateTime.TwoDigitMinuteRegex})|{HourRegex}|{PeriodHourNumRegex})(?<rightDesc>\\s*({PmRegex}|{AmRegex}|{DescRegex}))?"
             .replace("{HourRegex}", HourRegex)
             .replace("{PeriodHourNumRegex}", PeriodHourNumRegex)
+            .replace("{BaseDateTime.TwoDigitHourRegex}", BaseDateTime.TwoDigitHourRegex)
+            .replace("{BaseDateTime.TwoDigitMinuteRegex}", BaseDateTime.TwoDigitMinuteRegex)
             .replace("{DescRegex}", DescRegex)
             .replace("{PmRegex}", PmRegex)
             .replace("{AmRegex}", AmRegex)
@@ -781,7 +783,7 @@ public class EnglishDateTime {
             .replace("{PeriodHourNumRegex}", PeriodHourNumRegex)
             .replace("{HourRegex}", HourRegex);
 
-    public static final String OneOnOneRegex = "\\b(1\\s*:\\s*1)|(one (on )?one|one\\s*-\\s*one|one\\s*:\\s*one)\\b";
+    public static final String OneOnOneRegex = "\\b(1\\s*:\\s*1(?!\\d))|(one (on )?one|one\\s*-\\s*one|one\\s*:\\s*one)\\b";
 
     public static final String LaterEarlyPeriodRegex = "\\b(({PrefixPeriodRegex})\\s*\\b\\s*(?<suffix>{OneWordPeriodRegex})|({UnspecificEndOfRangeRegex}))\\b"
             .replace("{PrefixPeriodRegex}", PrefixPeriodRegex)

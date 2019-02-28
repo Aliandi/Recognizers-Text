@@ -166,7 +166,7 @@ namespace Microsoft.Recognizers.Definitions.English
 		public static readonly string TimeRegex11 = $@"\b(({TimeTokenPrefix}{TimeRegexWithDotConnector})(?!\s*per\s*cent|%)|({TimeRegexWithDotConnector}(\s*{DescRegex})))";
 		public static readonly string FirstTimeRegexInTimeRange = $@"\b{TimeRegexWithDotConnector}(\s*{DescRegex})?";
 		public static readonly string PureNumFromTo = $@"({RangePrefixRegex}\s+)?({HourRegex}|{PeriodHourNumRegex})(\s*(?<leftDesc>{DescRegex}))?\s*{TillRegex}\s*({HourRegex}|{PeriodHourNumRegex})(?<rightDesc>\s*({PmRegex}|{AmRegex}|{DescRegex}))?";
-		public static readonly string PureNumBetweenAnd = $@"(between\s+)({HourRegex}|{PeriodHourNumRegex})(\s*(?<leftDesc>{DescRegex}))?\s*{RangeConnectorRegex}\s*({HourRegex}|{PeriodHourNumRegex})(?<rightDesc>\s*({PmRegex}|{AmRegex}|{DescRegex}))?";
+		public static readonly string PureNumBetweenAnd = $@"(between\s+)(({BaseDateTime.TwoDigitHourRegex}{BaseDateTime.TwoDigitMinuteRegex})|{HourRegex}|{PeriodHourNumRegex})(\s*(?<leftDesc>{DescRegex}))?\s*{RangeConnectorRegex}\s*(({BaseDateTime.TwoDigitHourRegex}{BaseDateTime.TwoDigitMinuteRegex})|{HourRegex}|{PeriodHourNumRegex})(?<rightDesc>\s*({PmRegex}|{AmRegex}|{DescRegex}))?";
 		public static readonly string SpecificTimeFromTo = $@"({RangePrefixRegex}\s+)?(?<time1>(({TimeRegex2}|{FirstTimeRegexInTimeRange})|({HourRegex}|{PeriodHourNumRegex})(\s*(?<leftDesc>{DescRegex}))?))\s*{TillRegex}\s*(?<time2>(({TimeRegex2}|{TimeRegexWithDotConnector}(?<rightDesc>\s*{DescRegex}))|({HourRegex}|{PeriodHourNumRegex})(\s*(?<rightDesc>{DescRegex}))?))";
 		public static readonly string SpecificTimeBetweenAnd = $@"(between\s+)(?<time1>(({TimeRegex2}|{FirstTimeRegexInTimeRange})|({HourRegex}|{PeriodHourNumRegex})(\s*(?<leftDesc>{DescRegex}))?))\s*{RangeConnectorRegex}\s*(?<time2>(({TimeRegex2}|{TimeRegexWithDotConnector}(?<rightDesc>\s*{DescRegex}))|({HourRegex}|{PeriodHourNumRegex})(\s*(?<rightDesc>{DescRegex}))?))";
 		public const string PrepositionRegex = @"(?<prep>^(at|on|of)(\s+the)?$)";
@@ -243,7 +243,7 @@ namespace Microsoft.Recognizers.Definitions.English
 		public const string RestOfDateTimeRegex = @"\brest\s+(of\s+)?((the|my|this|current)\s+)?(?<unit>day)\b";
 		public const string MealTimeRegex = @"\b(at\s+)?(?<mealTime>lunchtime)\b";
 		public static readonly string NumberEndingPattern = $@"^(\s+(?<meeting>meeting|appointment|conference|call|skype call)\s+to\s+(?<newTime>{PeriodHourNumRegex}|{HourRegex})((\.)?$|(\.,|,|!|\?)))";
-		public const string OneOnOneRegex = @"\b(1\s*:\s*1)|(one (on )?one|one\s*-\s*one|one\s*:\s*one)\b";
+		public const string OneOnOneRegex = @"\b(1\s*:\s*1(?!\d))|(one (on )?one|one\s*-\s*one|one\s*:\s*one)\b";
 		public static readonly string LaterEarlyPeriodRegex = $@"\b(({PrefixPeriodRegex})\s*\b\s*(?<suffix>{OneWordPeriodRegex})|({UnspecificEndOfRangeRegex}))\b";
 		public static readonly string WeekWithWeekDayRangeRegex = $@"\b((?<week>({NextPrefixRegex}|{PreviousPrefixRegex}|this)\s+week)((\s+between\s+{WeekDayRegex}\s+and\s+{WeekDayRegex})|(\s+from\s+{WeekDayRegex}\s+to\s+{WeekDayRegex})))\b";
 		public const string GeneralEndingRegex = @"^\s*((\.,)|\.|,|!|\?)?\s*$";

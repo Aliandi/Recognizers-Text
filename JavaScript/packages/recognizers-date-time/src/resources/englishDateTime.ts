@@ -157,7 +157,7 @@ export namespace EnglishDateTime {
 	export const TimeRegex11 = `\\b((${TimeTokenPrefix}${TimeRegexWithDotConnector})(?!\\s*per\\s*cent|%)|(${TimeRegexWithDotConnector}(\\s*${DescRegex})))`;
 	export const FirstTimeRegexInTimeRange = `\\b${TimeRegexWithDotConnector}(\\s*${DescRegex})?`;
 	export const PureNumFromTo = `(${RangePrefixRegex}\\s+)?(${HourRegex}|${PeriodHourNumRegex})(\\s*(?<leftDesc>${DescRegex}))?\\s*${TillRegex}\\s*(${HourRegex}|${PeriodHourNumRegex})(?<rightDesc>\\s*(${PmRegex}|${AmRegex}|${DescRegex}))?`;
-	export const PureNumBetweenAnd = `(between\\s+)(${HourRegex}|${PeriodHourNumRegex})(\\s*(?<leftDesc>${DescRegex}))?\\s*${RangeConnectorRegex}\\s*(${HourRegex}|${PeriodHourNumRegex})(?<rightDesc>\\s*(${PmRegex}|${AmRegex}|${DescRegex}))?`;
+	export const PureNumBetweenAnd = `(between\\s+)((${BaseDateTime.TwoDigitHourRegex}${BaseDateTime.TwoDigitMinuteRegex})|${HourRegex}|${PeriodHourNumRegex})(\\s*(?<leftDesc>${DescRegex}))?\\s*${RangeConnectorRegex}\\s*((${BaseDateTime.TwoDigitHourRegex}${BaseDateTime.TwoDigitMinuteRegex})|${HourRegex}|${PeriodHourNumRegex})(?<rightDesc>\\s*(${PmRegex}|${AmRegex}|${DescRegex}))?`;
 	export const SpecificTimeFromTo = `(${RangePrefixRegex}\\s+)?(?<time1>((${TimeRegex2}|${FirstTimeRegexInTimeRange})|(${HourRegex}|${PeriodHourNumRegex})(\\s*(?<leftDesc>${DescRegex}))?))\\s*${TillRegex}\\s*(?<time2>((${TimeRegex2}|${TimeRegexWithDotConnector}(?<rightDesc>\\s*${DescRegex}))|(${HourRegex}|${PeriodHourNumRegex})(\\s*(?<rightDesc>${DescRegex}))?))`;
 	export const SpecificTimeBetweenAnd = `(between\\s+)(?<time1>((${TimeRegex2}|${FirstTimeRegexInTimeRange})|(${HourRegex}|${PeriodHourNumRegex})(\\s*(?<leftDesc>${DescRegex}))?))\\s*${RangeConnectorRegex}\\s*(?<time2>((${TimeRegex2}|${TimeRegexWithDotConnector}(?<rightDesc>\\s*${DescRegex}))|(${HourRegex}|${PeriodHourNumRegex})(\\s*(?<rightDesc>${DescRegex}))?))`;
 	export const PrepositionRegex = `(?<prep>^(at|on|of)(\\s+the)?$)`;
@@ -234,7 +234,7 @@ export namespace EnglishDateTime {
 	export const RestOfDateTimeRegex = `\\brest\\s+(of\\s+)?((the|my|this|current)\\s+)?(?<unit>day)\\b`;
 	export const MealTimeRegex = `\\b(at\\s+)?(?<mealTime>lunchtime)\\b`;
 	export const NumberEndingPattern = `^(\\s+(?<meeting>meeting|appointment|conference|call|skype call)\\s+to\\s+(?<newTime>${PeriodHourNumRegex}|${HourRegex})((\\.)?$|(\\.,|,|!|\\?)))`;
-	export const OneOnOneRegex = `\\b(1\\s*:\\s*1)|(one (on )?one|one\\s*-\\s*one|one\\s*:\\s*one)\\b`;
+	export const OneOnOneRegex = `\\b(1\\s*:\\s*1(?!\\d))|(one (on )?one|one\\s*-\\s*one|one\\s*:\\s*one)\\b`;
 	export const LaterEarlyPeriodRegex = `\\b((${PrefixPeriodRegex})\\s*\\b\\s*(?<suffix>${OneWordPeriodRegex})|(${UnspecificEndOfRangeRegex}))\\b`;
 	export const WeekWithWeekDayRangeRegex = `\\b((?<week>(${NextPrefixRegex}|${PreviousPrefixRegex}|this)\\s+week)((\\s+between\\s+${WeekDayRegex}\\s+and\\s+${WeekDayRegex})|(\\s+from\\s+${WeekDayRegex}\\s+to\\s+${WeekDayRegex})))\\b`;
 	export const GeneralEndingRegex = `^\\s*((\\.,)|\\.|,|!|\\?)?\\s*$`;
