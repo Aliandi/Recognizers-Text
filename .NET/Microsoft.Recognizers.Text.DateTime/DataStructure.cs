@@ -20,7 +20,7 @@
         /// <summary>
         /// Represents a year Period
         /// </summary>
-        ByYear
+        ByYear,
     }
 
     public enum PeriodType
